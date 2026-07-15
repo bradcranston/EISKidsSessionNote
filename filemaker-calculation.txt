@@ -1,0 +1,133 @@
+/* FileMaker Calculation to Create JSON Object for Session Note Form
+   
+   This calculation creates a JSON object with all the fields from your FileMaker database
+   to populate the Session Note web form.
+   
+   Usage: Use this in a FileMaker script step:
+   Perform JavaScript in Web Viewer [ "populateForm(" & JSONFormatElements ( ... ) & ")" ]
+*/
+
+JSONSetElement ( "{}" ;
+
+  // Header Information
+  [ "county" ; SessionNote::County ; JSONString ] ;
+  [ "staffId" ; SessionNote::StaffID ; JSONString ] ;
+  [ "travelMinutes" ; SessionNote::TravelMinutes ; JSONNumber ] ;
+  [ "unitJustification" ; SessionNote::UnitJustification ; JSONString ] ;
+  
+  // Session Details
+  [ "localId" ; SessionNote::LocalID ; JSONString ] ;
+  [ "sessionDate" ; SessionNote::SessionDate ; JSONString ] ;
+  [ "sessionStartTime" ; SessionNote::SessionStartTime ; JSONString ] ;
+  [ "sessionEndTime" ; SessionNote::SessionEndTime ; JSONString ] ;
+  [ "serviceUnits" ; SessionNote::ServiceUnits ; JSONNumber ] ;
+  
+  // Client Information
+  [ "clientFirstName" ; SessionNote::ClientFirstName ; JSONString ] ;
+  [ "clientLastName" ; SessionNote::ClientLastName ; JSONString ] ;
+  [ "serviceCode" ; SessionNote::ServiceCode ; JSONString ] ;
+  [ "sessionType" ; SessionNote::SessionType ; JSONString ] ;
+  [ "location" ; SessionNote::Location ; JSONString ] ;
+  
+  // IFSP/IEP Information
+  [ "ifspOutcomes" ; SessionNote::IFSPOutcomes ; JSONString ] ;
+  [ "specificTargets" ; SessionNote::SpecificTargets ; JSONString ] ;
+  
+  // Session Documentation
+  [ "outcomeUpdates" ; SessionNote::OutcomeUpdates ; JSONString ] ;
+  [ "whatWeDidToday" ; SessionNote::WhatWeDidToday ; JSONString ] ;
+  
+  // Coaching Strategies (Checkboxes)
+  [ "coachingOb" ; SessionNote::CoachingOb ; JSONBoolean ] ;
+  [ "coachingDT" ; SessionNote::CoachingDT ; JSONBoolean ] ;
+  [ "coachingDemN" ; SessionNote::CoachingDemN ; JSONBoolean ] ;
+  [ "coachingGP" ; SessionNote::CoachingGP ; JSONBoolean ] ;
+  [ "coachingCP" ; SessionNote::CoachingCP ; JSONBoolean ] ;
+  [ "coachingSF" ; SessionNote::CoachingSF ; JSONBoolean ] ;
+  [ "coachingPS" ; SessionNote::CoachingPS ; JSONBoolean ] ;
+  [ "coachingRe" ; SessionNote::CoachingRe ; JSONBoolean ] ;
+  [ "coachingOther" ; SessionNote::CoachingOther ; JSONString ] ;
+  
+  // Target Progress (Radio buttons)
+  [ "target1Progress" ; SessionNote::Target1Progress ; JSONString ] ;
+  [ "target2Progress" ; SessionNote::Target2Progress ; JSONString ] ;
+  
+  // Family Plan
+  [ "whatTargets" ; SessionNote::WhatTargets ; JSONString ] ;
+  [ "howActivities" ; SessionNote::HowActivities ; JSONString ] ;
+  [ "whenWhere" ; SessionNote::WhenWhere ; JSONString ] ;
+  [ "who" ; SessionNote::Who ; JSONString ] ;
+  [ "successLooks" ; SessionNote::SuccessLooks ; JSONString ] ;
+  
+  // Staff Information
+  [ "eIFirstName" ; SessionNote::EIFirstName ; JSONString ] ;
+  [ "eILastName" ; SessionNote::EILastName ; JSONString ] ;
+  [ "eICredentials" ; SessionNote::EICredentials ; JSONString ] ;
+  [ "eIPhone" ; SessionNote::EIPhone ; JSONString ] ;
+  
+  // Parent/Caregiver Information
+  [ "parentFirstName" ; SessionNote::ParentFirstName ; JSONString ] ;
+  [ "parentLastName" ; SessionNote::ParentLastName ; JSONString ] ;
+  
+  // Signatures (Base64 encoded)
+  [ "eISignatureBase64" ; SessionNote::EISignatureBase64 ; JSONString ] ;
+  [ "parentSignatureBase64" ; SessionNote::ParentSignatureBase64 ; JSONString ] ;
+  
+  // Service Coordinator
+  [ "serviceCoordinatorName" ; SessionNote::ServiceCoordinatorName ; JSONString ] ;
+  [ "serviceCoordinatorLastName" ; SessionNote::ServiceCoordinatorLastName ; JSONString ] ;
+  
+  // Next Session
+  [ "nextSessionDate" ; SessionNote::NextSessionDate ; JSONString ] ;
+  [ "nextSessionTime" ; SessionNote::NextSessionTime ; JSONString ] ;
+
+  // Record completion status and view-only lock
+  [ "status" ; SessionNote::Status ; JSONString ] ;
+  [ "viewOnly" ; SessionNote::ViewOnly ; JSONBoolean ]
+)
+
+
+/* SIGNATURE HANDLING
+   
+   Signatures are stored as base64-encoded PNG images (data URLs).
+   
+   To save signatures from web viewer to FileMaker container fields:
+   1. Extract the base64 data from the returned JSON
+   2. Use Base64Decode() to convert to binary
+   3. Insert into container field
+   
+   Example script steps:
+   Set Variable [ $json ; Value: Get(ScriptParameter) ]
+   Set Variable [ $eiSig ; Value: JSONGetElement($json ; "eISignatureBase64") ]
+   Set Variable [ $parentSig ; Value: JSONGetElement($json ; "parentSignatureBase64") ]
+   
+   # Remove the "data:image/png;base64," prefix before decoding
+   Set Variable [ $eiSigData ; Value: Substitute($eiSig ; "data:image/png;base64," ; "") ]
+   Set Variable [ $parentSigData ; Value: Substitute($parentSig ; "data:image/png;base64," ; "") ]
+   
+   # Insert into container fields
+   Set Field [ SessionNote::EISignature ; Base64Decode($eiSigData ; "signature.png") ]
+   Set Field [ SessionNote::ParentSignature ; Base64Decode($parentSigData ; "signature.png") ]
+   
+   To load signatures from FileMaker to web viewer:
+   Use Base64Encode() with the "data:image/png;base64," prefix
+   
+   Set Field [ SessionNote::EISignatureBase64 ; 
+     "data:image/png;base64," & Base64Encode(SessionNote::EISignature) ]
+*/
+
+
+/* ALTERNATIVE: Simpler FileMaker Script Step
+   
+   In your FileMaker script, add this step:
+   
+   Perform JavaScript in Web Viewer [ Object Name: "sessionNoteWebViewer" ; 
+     Function: "populateForm" ; 
+     Parameters: <calculated JSON from above>
+   ]
+   
+   OR use this compact version:
+   
+   Set Variable [ $json ; Value: <paste calculation above> ]
+   Perform JavaScript in Web Viewer [ "populateForm(" & $json & ")" ]
+*/

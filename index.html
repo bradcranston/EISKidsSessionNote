@@ -2,16 +2,481 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       @import "./src/style.css";
     </style>
-    <title>JSDev</title>
+    <title>EIS Session Note</title>
   </head>
   <body>
-    <h1>Alright. You're set.</h1>
-      <h2 class="tintedBlackLeft">Now build something amazing!</h2>
-      <p>JS in FM is amazing</p>
-    <button type="button">Click Me!</button>
+    <div class="container">
+      <div id="viewOnlyBanner">VIEW ONLY — This session note cannot be edited</div>
+      <h1><span>EIS Session Note</span><span id="headerStatus"></span></h1>
+      
+      <form id="sessionNoteForm">
+        <div id="validationSummary" class="validation-summary" style="display:none;"></div>
+        <!-- Header: County, Staff ID, Travel -->
+        <section class="form-section">
+ 
+          
+          <div class="form-row">
+            <div class="form-group narrow">
+              <label for="county">County:</label>
+              <input type="text" id="county" name="county" list="county-list" placeholder="Select or type county" />
+              <datalist id="county-list">
+                <option value="Allegheny">
+                <option value="Butler">
+                <option value="Chester">
+                <option value="Cumberland/Perry">
+                <option value="Dauphin">
+                <option value="Delaware">
+                <option value="Lancaster">
+                <option value="Lebanon">
+                <option value="Schuylkill">
+                <option value="Washington">
+                <option value="Westmoreland">
+                <option value="York/Adams">
+              </datalist>
+            </div>
+            
+            <div class="form-group">
+              <label for="staffId">Staff ID:</label>
+              <input type="text" id="staffId" name="staffId" />
+            </div>
+            
+            <div class="form-group narrow">
+              <label for="travelMinutes">Travel Minutes:</label>
+              <input type="number" id="travelMinutes" name="travelMinutes" />
+            </div>
+            
+            <div class="form-group">
+              <label for="unitJustification">Unit Justification:</label>
+              <input type="text" id="unitJustification" name="unitJustification" />
+              <span id="unitJustificationNotice" class="error-msg" style="color:#92400e;"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="sessionStatus">Session Status:</label>
+              <input type="text" id="sessionStatus" name="sessionStatus" list="sessionStatus-list" placeholder="Select or type status" />
+              <datalist id="sessionStatus-list">
+                <option value="AON - Act of Nature">
+                <option value="CA - Child Absent">
+                <option value="H - Held">
+                <option value="IS - Inability to Schedule">
+                <option value="NS - No Show">
+                <option value="PA - Professional Absent">
+              </datalist>
+            </div>
+            
+          </div>
+
+          <div id="cancellationSection" class="cancellation-section" style="display:none;">
+            <label for="cancellationDescription">Description of cancellation/absence:</label>
+            <textarea id="cancellationDescription" name="cancellationDescription" rows="3" placeholder="Describe the reason for the cancellation or absence..."></textarea>
+          </div>
+        
+        </section>
+
+        <!-- Session Details -->
+        <section class="form-section">
+          <h2>Session Details</h2>
+                    <div class="form-row">
+            <div class="form-group">
+              <label for="localId">Optional Local ID # (if required):</label>
+              <input type="text" id="localId" name="localId" maxlength="11" />
+            </div>
+            
+            <div class="form-group">
+              <label for="sessionDate">Date:</label>
+              <input type="date" id="sessionDate" name="sessionDate" />
+            </div>
+            
+            <div class="form-group narrow">
+              <label for="sessionStartTime">Time In:</label>
+              <input type="time" id="sessionStartTime" name="sessionStartTime" />
+            </div>
+            
+            <div class="form-group narrow">
+              <label for="sessionEndTime">Time Out:</label>
+              <input type="time" id="sessionEndTime" name="sessionEndTime" />
+              <span id="timeWarning" class="error-msg" style="color:#92400e;"></span>
+            </div>
+            
+            <div class="form-group narrow">
+              <label for="serviceUnits">Units:</label>
+              <input type="number" id="serviceUnits" name="serviceUnits" step="0.25" readonly />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group narrow">
+              <label for="clientFirstName">Child First Name:</label>
+              <input type="text" id="clientFirstName" name="clientFirstName" />
+            </div>
+            
+            <div class="form-group narrow">
+              <label for="clientLastName">Child Last Name:</label>
+              <input type="text" id="clientLastName" name="clientLastName" />
+            </div>
+            
+            <div class="form-group">
+              <label for="serviceCode">Type of Service:</label>
+              <input type="text" id="serviceCode" name="serviceCode" list="serviceCode-list" placeholder="Select or type service" />
+              <datalist id="serviceCode-list">
+                <option value="SI - Hearing">
+                <option value="SI - Vision">
+                <option value="COTA - OT">
+                <option value="COTA - SI">
+                <option value="Dietitian/Nutrition">
+                <option value="Nurse/Nutrition">
+                <option value="OT">
+                <option value="PT">
+                <option value="PT - Infant Massage">
+                <option value="SI">
+                <option value="SI - BHV">
+                <option value="SI - Infant Massage">
+                <option value="Speech">
+              </datalist>
+            </div>
+            
+            <div class="form-group">
+              <label for="sessionType">Type of Session:</label>
+              <input type="text" id="sessionType" name="sessionType" list="sessionType-list" placeholder="Select or type session type" />
+              <datalist id="sessionType-list">
+                <option value="Initial">
+                <option value="Assessment">
+                <option value="Consult">
+                <option value="FBA">
+                <option value="Ongoing">
+                <option value="Review">
+                <option value="Teaming (Pre-approved)">
+              </datalist>
+            </div>
+
+                        <div class="form-group">
+              <label for="location">Location of Session:</label>
+              <input type="text" id="location" name="location" list="location-list" placeholder="Select or type location" />
+              <datalist id="location-list">
+                <option value="Home">
+                <option value="Daycare">
+                <option value="Community">
+                <option value="Teleintervention">
+                <option value="Other">
+              </datalist>
+            </div>
+            
+          </div>
+          
+
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ifspOutcomes">Outcome(s)/Goal(s) from IFSP/IEP currently addressed:</label>
+              <div id="ifspOutcomesContainer">
+                <input type="text" id="ifspOutcomes" name="ifspOutcomes" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="specificTargets">Specific targets to reach outcome(s)/goal(s):</label>
+              <input type="text" id="specificTargets" name="specificTargets" />
+            </div>
+          </div>
+          
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #ccc;" />
+          
+          <div class="form-group full-width">
+            <label>Child and family outcome updates including updates on targets from family plan for between sessions:</label>
+            <div class="prompt-subfields">
+              <div class="prompt-subfield">
+                <label class="prompt-subfield-label">What did the family report from practicing between sessions?</label>
+                <textarea id="outcomeUpdates_q1" class="prompt-subfield-input" rows="2"></textarea>
+              </div>
+              <div class="prompt-subfield">
+                <label class="prompt-subfield-label">How is the child progressing toward their outcome(s)/goal(s)?</label>
+                <textarea id="outcomeUpdates_q2" class="prompt-subfield-input" rows="2"></textarea>
+              </div>
+            </div>
+            <textarea id="outcomeUpdates" name="outcomeUpdates" class="prompt-combined" rows="4"></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label>Present:</label>
+            <div class="present-inline">
+              <label class="present-inline-label">Was child present?</label>
+              <label class="present-radio-label"><input type="radio" name="childPresentStatus" id="childPresentYes" value="yes" /> Yes</label>
+              <label class="present-radio-label"><input type="radio" name="childPresentStatus" id="childPresentNo" value="no" /> No</label>
+            </div>
+            <div id="presentNoReasonWrap" style="display:none; margin-top:6px; padding-left:16px; border-left:3px solid #ccc; display:none; flex-direction:column; gap:8px;">
+              <div class="present-inline">
+                <label class="present-inline-label">Reason child was absent:</label>
+                <input type="text" id="childAbsentReason" name="childAbsentReason" class="present-others-input" placeholder="Reason child was absent" />
+              </div>
+              <div class="present-inline">
+                <label class="present-inline-label">Teaming pre-approved?</label>
+                <label class="present-radio-label"><input type="radio" name="teamingPreApproved" value="yes" /> Yes</label>
+                <label class="present-radio-label"><input type="radio" name="teamingPreApproved" value="no" /> No</label>
+              </div>
+            </div>
+            <div class="present-inline" style="margin-top:6px;">
+              <label class="present-inline-label">Others present:</label>
+              <input type="text" id="othersPresent" name="othersPresent" class="present-others-input" placeholder="Name/role of others present" />
+            </div>
+            <textarea id="whatWeDidTodayPresent" name="whatWeDidTodayPresent" rows="2" readonly style="margin-top:8px; color:#444; background:#f5f5f5;"></textarea>
+          </div>
+                    
+          <div class="form-group full-width">
+            <label>What we did today to address the outcome(s) and reach session targets:</label>
+            <div class="prompt-subfields" id="whatWeDidTodaySubfields">
+              <div class="prompt-subfield" id="wwdtReviewNote" style="display:none;">
+                <p class="prompt-subfield-note">Review/Teaming sessions: include activities outside of discussing progress and goals.</p>
+              </div>
+              <div class="prompt-subfield">
+                <label class="prompt-subfield-label">What routines were practiced to embed strategies to support child learning?</label>
+                <textarea id="whatWeDidToday_q1" class="prompt-subfield-input" rows="2"></textarea>
+              </div>
+              <div class="prompt-subfield">
+                <label class="prompt-subfield-label">What strategies were used?</label>
+                <textarea id="whatWeDidToday_q2" class="prompt-subfield-input" rows="2"></textarea>
+              </div>
+              <div class="prompt-subfield">
+                <label class="prompt-subfield-label">How did the family participate and how did the child participate?</label>
+                <textarea id="whatWeDidToday_q3" class="prompt-subfield-input" rows="2"></textarea>
+              </div>
+              <div class="prompt-subfield" id="wwdtTelehealthPrompt" style="display:none;">
+                <label class="prompt-subfield-label">What was the reason the session was held via TI instead of in-person?</label>
+                <textarea id="whatWeDidToday_q4" class="prompt-subfield-input" rows="2"></textarea>
+              </div>
+            </div>
+            <textarea id="whatWeDidToday" name="whatWeDidToday" class="prompt-combined" rows="5"></textarea>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 2px solid #ccc;" />
+
+          <div class="form-group full-width">
+            <label>Coaching strategies used in routines:</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 8px;">
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingOb" name="coachingStrategies" value="Observation" />
+                Observation (Ob)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingDT" name="coachingStrategies" value="Direct teaching" />
+                Direct teaching (DT)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingDemN" name="coachingStrategies" value="Demonstration with narration" />
+                Demonstration with narration (Dem/N)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingGP" name="coachingStrategies" value="Guided practice" />
+                Guided practice (GP)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingCP" name="coachingStrategies" value="Caregiver practice" />
+                Caregiver practice (CP)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingSF" name="coachingStrategies" value="Specific feedback" />
+                Specific feedback (SF)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingPS" name="coachingStrategies" value="Problem solving" />
+                Problem solving (PS)
+              </label>
+              <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                <input type="checkbox" id="coachingRe" name="coachingStrategies" value="Reflection" />
+                Reflection (Re)
+              </label>
+            </div>
+            <div style="margin-top: 10px;">
+              <label for="coachingOther" style="font-weight: normal;">Other:</label>
+              <input type="text" id="coachingOther" name="coachingOther" style="margin-left: 5px; flex: 1;" />
+              <span class="error-msg" id="coachingStrategiesError"></span>
+            </div>
+          </div>
+                    <hr style="margin: 20px 0; border: none; border-top: 2px solid #ccc;" />
+
+          <div class="form-group full-width">
+            <label>Describe progress of target(s) identified in session plan and practiced in session:</label>
+            
+            <div style="margin-top: 10px; margin-bottom: 15px;">
+              <div style="font-weight: 600; margin-bottom: 8px;">Target 1:</div>
+              <textarea id="target1Notes" name="target1Notes" rows="2" style="width: 100%; margin-top: 8px;" placeholder="Notes for Target 1..."></textarea>
+              <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-left: 20px; margin-top: 8px;">
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target1Completed" name="target1Progress" value="Completed target as described" />
+                  Completed target as described
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target1Partial" name="target1Progress" value="Some/partial target use" />
+                  Some/partial target use
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target1NotYet" name="target1Progress" value="Not yet" />
+                  Not yet
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target1DidNotPractice" name="target1Progress" value="Did not practice" />
+                  Did not practice
+                </label>
+              </div>
+              <span class="error-msg" id="target1ProgressError"></span>
+            </div>
+            
+            <div style="margin-bottom: 10px;">
+              <div style="font-weight: 600; margin-bottom: 8px;">Target 2:</div>
+              <textarea id="target2Notes" name="target2Notes" rows="2" style="width: 100%; margin-top: 8px;" placeholder="Notes for Target 2..."></textarea>
+              <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-left: 20px; margin-top: 8px;">
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target2Completed" name="target2Progress" value="Completed target as described" />
+                  Completed target as described
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target2Partial" name="target2Progress" value="Some/partial target use" />
+                  Some/partial target use
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target2NotYet" name="target2Progress" value="Not yet" />
+                  Not yet
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+                  <input type="radio" id="target2DidNotPractice" name="target2Progress" value="Did not practice" />
+                  Did not practice
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Session Documentation -->
+        <section class="form-section">
+          <h2>Family plan for between sessions:</h2>
+          
+          <div class="form-group full-width">
+            <label for="whatTargets">What? (Targets):</label>
+            <textarea id="whatTargets" name="whatTargets" rows="3"></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="howActivities">How? (Strategies):</label>
+            <textarea id="howActivities" name="howActivities" rows="3"></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="whenWhere">When and Where? (Routines & locations):</label>
+            <textarea id="whenWhere" name="whenWhere" rows="2"></textarea>
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="who">Who? (Which caregiver or caregivers):</label>
+            <input type="text" id="who" name="who" />
+          </div>
+          
+          <div class="form-group full-width">
+            <label for="successLooks">What will success look like for the family?:</label>
+            <input type="text" id="successLooks" name="successLooks" />
+          </div>
+        </section>
+
+        <!-- Signature and Administrative -->
+        <section class="form-section">
+          <h2>Signature and Administrative Information</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eIFirstName">EI First Name:</label>
+              <input type="text" id="eIFirstName" name="eIFirstName" />
+            </div>
+            
+            <div class="form-group">
+              <label for="eILastName">EI Last Name:</label>
+              <input type="text" id="eILastName" name="eILastName" />
+            </div>
+            
+            <div class="form-group">
+              <label for="eICredentials">Credentials/Title:</label>
+              <input type="text" id="eICredentials" name="eICredentials" />
+            </div>
+            
+            <div class="form-group">
+              <label for="eIPhone">EI Phone:</label>
+              <input type="text" id="eIPhone" name="eIPhone" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group signature-group">
+              <label for="eISignature">EI Signature:</label>
+              <div class="signature-wrapper">
+                <canvas id="eISignature" class="signature-pad"></canvas>
+                <button type="button" class="btn-clear-signature" id="clearSignature">Clear</button>
+              </div>
+              <span class="error-msg" id="eISignatureError"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="parentFirstName">Parent/Caregiver First Name:</label>
+              <input type="text" id="parentFirstName" name="parentFirstName" />
+            </div>
+            
+            <div class="form-group">
+              <label for="parentLastName">Parent/Caregiver Last Name:</label>
+              <input type="text" id="parentLastName" name="parentLastName" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group signature-group">
+              <label for="parentSignature">Parent/Caregiver Signature:</label>
+              <div class="signature-wrapper">
+                <canvas id="parentSignature" class="signature-pad"></canvas>
+                <button type="button" class="btn-clear-signature" id="clearParentSignature">Clear</button>
+              </div>
+              <span class="error-msg" id="parentSignatureError"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="serviceCoordinatorName">Service Coordinator First Name:</label>
+              <input type="text" id="serviceCoordinatorName" name="serviceCoordinatorName" />
+            </div>
+            
+            <div class="form-group">
+              <label for="serviceCoordinatorLastName">Service Coordinator Last Name:</label>
+              <input type="text" id="serviceCoordinatorLastName" name="serviceCoordinatorLastName" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nextSessionDate">Date of Next Session:</label>
+              <input type="date" id="nextSessionDate" name="nextSessionDate" />
+              <span id="nextSessionDateWarning" class="error-msg" style="color:#92400e;"></span>
+            </div>
+            
+            <div class="form-group">
+              <label for="nextSessionTime">Time of Next Session:</label>
+              <input type="time" id="nextSessionTime" name="nextSessionTime" />
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Form Actions -->
+        <input type="hidden" id="alert" name="alert" />
+        <input type="hidden" id="duration" name="duration" />
+      </form>
+    </div>
+
+    <div id="floatingSaveBar">
+      <button type="submit" form="sessionNoteForm" class="btn-primary">Save Session Note</button>
+    </div>
+
+    <div id="saveToast">&#10003; Session note saved</div>
 
     <script type="module">
       import "./src/index.js";
