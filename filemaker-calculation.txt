@@ -81,6 +81,26 @@ JSONSetElement ( "{}" ;
   [ "nextSessionDate" ; SessionNote::NextSessionDate ; JSONString ] ;
   [ "nextSessionTime" ; SessionNote::NextSessionTime ; JSONString ] ;
 
+  // Human-readable formatted date/time values (sent by the web form on save).
+  // Use these in FileMaker calculated fields such as billingLine and nextSessionDisplay
+  // instead of the raw ISO values above.
+  //   sessionDateFormatted      → "MM/DD/YYYY"
+  //   sessionStartTimeFormatted → "h:MM AM/PM"
+  //   sessionEndTimeFormatted   → "h:MM AM/PM"
+  //   nextSessionDateFormatted  → "MM/DD/YYYY"
+  //   nextSessionTimeFormatted  → "h:MM AM/PM"
+  //
+  // Example billing line calculation (FileMaker):
+  //   JSONGetElement($json; "sessionDateFormatted") & " | " &
+  //   JSONGetElement($json; "serviceCode") & " | " &
+  //   JSONGetElement($json; "sessionStartTimeFormatted") & " - " &
+  //   JSONGetElement($json; "sessionEndTimeFormatted") & " | " &
+  //   JSONGetElement($json; "serviceUnits") & " units"
+  //
+  // Example next session display:
+  //   JSONGetElement($json; "nextSessionDateFormatted") & " at " &
+  //   JSONGetElement($json; "nextSessionTimeFormatted")
+
   // Record completion status and view-only lock
   [ "status" ; SessionNote::Status ; JSONString ] ;
   [ "viewOnly" ; SessionNote::ViewOnly ; JSONBoolean ]

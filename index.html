@@ -57,15 +57,15 @@
 
             <div class="form-group">
               <label for="sessionStatus">Session Status:</label>
-              <input type="text" id="sessionStatus" name="sessionStatus" list="sessionStatus-list" placeholder="Select or type status" />
-              <datalist id="sessionStatus-list">
-                <option value="AON - Act of Nature">
-                <option value="CA - Child Absent">
-                <option value="H - Held">
-                <option value="IS - Inability to Schedule">
-                <option value="NS - No Show">
-                <option value="PA - Professional Absent">
-              </datalist>
+              <select id="sessionStatus" name="sessionStatus">
+                <option value="">Select status…</option>
+                <option value="AON - Act of Nature">AON - Act of Nature</option>
+                <option value="CA - Child Absent">CA - Child Absent</option>
+                <option value="H - Held">H - Held</option>
+                <option value="IS - Inability to Schedule">IS - Inability to Schedule</option>
+                <option value="NS - No Show">NS - No Show</option>
+                <option value="PA - Professional Absent">PA - Professional Absent</option>
+              </select>
             </div>
             
           </div>
@@ -141,28 +141,28 @@
             
             <div class="form-group">
               <label for="sessionType">Type of Session:</label>
-              <input type="text" id="sessionType" name="sessionType" list="sessionType-list" placeholder="Select or type session type" />
-              <datalist id="sessionType-list">
-                <option value="Initial">
-                <option value="Assessment">
-                <option value="Consult">
-                <option value="FBA">
-                <option value="Ongoing">
-                <option value="Review">
-                <option value="Teaming (Pre-approved)">
-              </datalist>
+              <select id="sessionType" name="sessionType">
+                <option value="">Select session type…</option>
+                <option value="Initial">Initial</option>
+                <option value="Assessment">Assessment</option>
+                <option value="Consult">Consult</option>
+                <option value="FBA">FBA</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Review">Review</option>
+                <option value="Teaming (Pre-approved)">Teaming (Pre-approved)</option>
+              </select>
             </div>
 
                         <div class="form-group">
               <label for="location">Location of Session:</label>
-              <input type="text" id="location" name="location" list="location-list" placeholder="Select or type location" />
-              <datalist id="location-list">
-                <option value="Home">
-                <option value="Daycare">
-                <option value="Community">
-                <option value="Teleintervention">
-                <option value="Other">
-              </datalist>
+              <select id="location" name="location">
+                <option value="">Select location…</option>
+                <option value="Home">Home</option>
+                <option value="Daycare">Daycare</option>
+                <option value="Community">Community</option>
+                <option value="Teleintervention">Teleintervention</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
             
           </div>
@@ -410,6 +410,9 @@
               <label for="eISignature">EI Signature:</label>
               <div class="signature-wrapper">
                 <canvas id="eISignature" class="signature-pad"></canvas>
+                <div class="signature-activate-overlay" id="eISignatureOverlay">
+                  <span>Tap to Sign</span>
+                </div>
                 <button type="button" class="btn-clear-signature" id="clearSignature">Clear</button>
               </div>
               <span class="error-msg" id="eISignatureError"></span>
@@ -433,6 +436,9 @@
               <label for="parentSignature">Parent/Caregiver Signature:</label>
               <div class="signature-wrapper">
                 <canvas id="parentSignature" class="signature-pad"></canvas>
+                <div class="signature-activate-overlay" id="parentSignatureOverlay">
+                  <span>Tap to Sign</span>
+                </div>
                 <button type="button" class="btn-clear-signature" id="clearParentSignature">Clear</button>
               </div>
               <span class="error-msg" id="parentSignatureError"></span>

@@ -110,14 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeSignaturePad(canvasId, clearButtonId) {
   const canvas = document.getElementById(canvasId);
   const clearBtn = document.getElementById(clearButtonId);
-  
+  const overlay = document.getElementById(canvasId + 'Overlay');
+
   if (!canvas) return;
-  
+
   const ctx = canvas.getContext('2d');
   let isDrawing = false;
+  let isActive = false;
   let lastX = 0;
   let lastY = 0;
-  
+
   // Set canvas size to match display size
   const resizeCanvas = () => {
     const rect = canvas.getBoundingClientRect();
@@ -129,10 +131,10 @@ function initializeSignaturePad(canvasId, clearButtonId) {
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   };
-  
+
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  
+
   // Get coordinates relative to canvas
   const getCoordinates = (e) => {
     const rect = canvas.getBoundingClientRect();
@@ -142,53 +144,98 @@ function initializeSignaturePad(canvasId, clearButtonId) {
       y: touch.clientY - rect.top
     };
   };
-  
+
+  // Activate the pad (called by overlay tap or when a saved signature is loaded)
+  const activate = () => {
+    isActive = true;
+    if (overlay) overlay.style.display = 'none';
+  };
+
+  // Deactivate the pad (called by Clear button)
+  const deactivate = () => {
+    isActive = false;
+    if (overlay) overlay.style.display = '';
+  };
+
+  // Expose activate/deactivate on the canvas element so loadSignatureFromBase64 can call them
+  canvas._activate = activate;
+  canvas._deactivate = deactivate;
+
+  // Overlay tap → activate so the user can sign
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      // For the EI Signature box, if the session is Held, validate the rest of
+      // the form first so the user can correct any errors before signing.
+      if (canvasId === 'eISignature') {
+        const statusEl = document.getElementById('sessionStatus');
+        const status = statusEl ? statusEl.value.trim() : '';
+        if (status === 'H - Held') {
+          validateForm({ skipEISignatureCheck: true });
+        }
+      }
+      activate();
+    });
+  }
+
+  // Deactivate when the user interacts with anything outside this signature wrapper
+  const wrapper = canvas.closest('.signature-wrapper');
+  const deactivateOnOutsideInteraction = (e) => {
+    if (!isActive) return;
+    if (wrapper && !wrapper.contains(e.target)) {
+      deactivate();
+    }
+  };
+  document.addEventListener('touchstart', deactivateOnOutsideInteraction);
+  document.addEventListener('mousedown', deactivateOnOutsideInteraction);
+
   // Start drawing
   const startDrawing = (e) => {
+    if (!isActive || document.body.classList.contains('view-only')) return;
     e.preventDefault();
     isDrawing = true;
     const coords = getCoordinates(e);
     lastX = coords.x;
     lastY = coords.y;
   };
-  
+
   // Draw
   const draw = (e) => {
-    if (!isDrawing) return;
+    if (!isDrawing || !isActive) return;
     e.preventDefault();
-    
+
     const coords = getCoordinates(e);
-    
+
     ctx.beginPath();
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(coords.x, coords.y);
     ctx.stroke();
-    
+
     lastX = coords.x;
     lastY = coords.y;
   };
-  
+
   // Stop drawing
   const stopDrawing = () => {
     isDrawing = false;
   };
-  
+
   // Mouse events
   canvas.addEventListener('mousedown', startDrawing);
   canvas.addEventListener('mousemove', draw);
   canvas.addEventListener('mouseup', stopDrawing);
   canvas.addEventListener('mouseleave', stopDrawing);
-  
+
   // Touch events for iPad
   canvas.addEventListener('touchstart', startDrawing);
   canvas.addEventListener('touchmove', draw);
   canvas.addEventListener('touchend', stopDrawing);
   canvas.addEventListener('touchcancel', stopDrawing);
-  
-  // Clear signature
+
+  // Clear signature and deactivate so the user must tap again to re-sign
   if (clearBtn) {
     clearBtn.addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      deactivate();
     });
   }
 }
@@ -356,6 +403,8 @@ function loadSignatureFromBase64(canvasId, base64Data) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // Draw image to canvas
     ctx.drawImage(img, 0, 0, canvas.width / window.devicePixelRatio, canvas.height / window.devicePixelRatio);
+    // Activate the pad so the loaded signature is visible without the overlay
+    if (canvas._activate) canvas._activate();
   };
   
   img.src = base64Data;
@@ -426,11 +475,36 @@ function showSaveConfirmation() {
   }
 }
 
+// Convert YYYY-MM-DD → MM/DD/YYYY for FileMaker display fields
+function formatDateForDisplay(isoDate) {
+  if (!isoDate || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return isoDate || '';
+  const [y, m, d] = isoDate.split('-');
+  return `${m}/${d}/${y}`;
+}
+
+// Convert HH:MM (24-hour) → h:MM AM/PM for FileMaker display fields
+function formatTimeForDisplay(time24) {
+  if (!time24 || !/^\d{2}:\d{2}$/.test(time24)) return time24 || '';
+  const [h, m] = time24.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour = h % 12 || 12;
+  return `${hour}:${m.toString().padStart(2, '0')} ${period}`;
+}
+
 // Save data to FileMaker
 function saveToFileMaker(data) {
   console.log('Saving to FileMaker:', data);
   
       data.mode = 'save'; // Add mode to indicate saving action
+
+  // Append human-readable formatted date/time fields for FileMaker billing
+  // and next-session display calculations (e.g. billingLine, nextSessionDisplay).
+  // Raw ISO values are kept intact for date/time field storage.
+  data.sessionDateFormatted      = formatDateForDisplay(data.sessionDate);
+  data.sessionStartTimeFormatted = formatTimeForDisplay(data.sessionStartTime);
+  data.sessionEndTimeFormatted   = formatTimeForDisplay(data.sessionEndTime);
+  data.nextSessionDateFormatted  = formatDateForDisplay(data.nextSessionDate);
+  data.nextSessionTimeFormatted  = formatTimeForDisplay(data.nextSessionTime);
 
   // Create FileMaker script parameter
   const scriptParam = JSON.stringify(data);
@@ -463,6 +537,8 @@ function loadFormData() {
 function syncPresentWidget() {
   const staffFirst = (document.getElementById('eIFirstName') || {}).value || '';
   const staffLast  = (document.getElementById('eILastName')  || {}).value || '';
+  const childFirst = (document.getElementById('clientFirstName') || {}).value || '';
+  const childPresentVal = (document.querySelector('input[name="childPresentStatus"]:checked') || {}).value || '';
   // Show/hide the absent reason fields
   const noWrap = document.getElementById('presentNoReasonWrap');
   if (noWrap) noWrap.style.display = childPresentVal === 'no' ? 'flex' : 'none';
@@ -646,12 +722,6 @@ window.populateForm = function(jsonData) {
 
     // Clear form first
     form.reset();
-    
-    // Handle goals array — auto-fill single goal or build pill multi-select
-    if (Array.isArray(data.goals) && data.goals.length > 0) {
-      buildGoalsPillSelect('ifspOutcomesContainer', 'ifspOutcomes', data.goals,
-        data.goals.length === 1 ? [data.goals[0]] : []);
-    }
 
     // Populate all form fields
     for (let key in data) {
@@ -682,6 +752,21 @@ window.populateForm = function(jsonData) {
       }
     }
     
+    // Build pill multi-select for goals AFTER the loop so the loop's empty
+    // ifspOutcomes value cannot overwrite the hidden input set by syncHidden().
+    if (Array.isArray(data.goals) && data.goals.length > 0) {
+      let preSelected = [];
+      if (data.ifspOutcomes) {
+        // Restore previously saved selections that are still in the goals list
+        preSelected = data.ifspOutcomes.split(', ').filter(g => data.goals.includes(g));
+      }
+      if (preSelected.length === 0 && data.goals.length === 1) {
+        // Auto-select the only available goal for new sessions
+        preSelected = [data.goals[0]];
+      }
+      buildGoalsPillSelect('ifspOutcomesContainer', 'ifspOutcomes', data.goals, preSelected);
+    }
+
     // Load signatures from base64 if present
     if (data.eISignatureBase64) {
       loadSignatureFromBase64('eISignature', data.eISignatureBase64);
@@ -814,7 +899,7 @@ function autoResizeSubfield(el) {
 function syncOutcomeUpdatesCombined() {
   const q1 = (document.getElementById('outcomeUpdates_q1') || {}).value || '';
   const q2 = (document.getElementById('outcomeUpdates_q2') || {}).value || '';
-  const combined = [q1, q2].filter(s => s.trim()).join('\n\n');
+  const combined = [q1, q2].filter(s => s.trim()).join(' ');
   const el = document.getElementById('outcomeUpdates');
   if (el) el.value = combined;
 }
@@ -826,7 +911,7 @@ function syncWhatWeDidTodayCombined() {
   const q4 = (document.getElementById('whatWeDidToday_q4') || {}).value || '';
   const parts = [q1, q2, q3, q4].filter(s => s.trim());
   const el = document.getElementById('whatWeDidToday');
-  if (el) el.value = parts.join('\n\n');
+  if (el) el.value = parts.join(' ');
 }
 
 function distributeToSubFields(combinedId, subIds) {
@@ -939,7 +1024,7 @@ function showValidationSummary(errors) {
   summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function validateForm() {
+function validateForm(options = {}) {
   clearValidationErrors();
   const errors = [];
 
@@ -997,8 +1082,8 @@ function validateForm() {
       errors.push('Target 1 progress selection');
     }
 
-    // EI Signature required
-    if (isSignatureEmpty('eISignature')) {
+    // EI Signature required (skipped when the user is actively tapping in to sign)
+    if (!options.skipEISignatureCheck && isSignatureEmpty('eISignature')) {
       const eiSig = document.getElementById('eISignature');
       if (eiSig) eiSig.style.borderColor = '#dc3545';
       const eiErr = document.getElementById('eISignatureError');

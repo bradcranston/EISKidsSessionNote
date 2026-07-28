@@ -522,6 +522,7 @@ button:active {
 }
 
 .signature-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -539,6 +540,35 @@ button:active {
 
 .signature-pad:hover {
   border-color: #006690;
+}
+
+.signature-activate-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(240, 247, 252, 0.88);
+  border: 2px dashed #006690;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: auto;
+}
+
+.signature-activate-overlay span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #006690;
+  pointer-events: none;
+}
+
+/* Hide overlay in view-only mode — the saved signature should be visible */
+body.view-only .signature-activate-overlay {
+  display: none;
 }
 
 .btn-clear-signature {
