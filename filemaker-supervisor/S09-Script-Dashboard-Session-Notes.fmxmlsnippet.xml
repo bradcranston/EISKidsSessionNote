@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Description: pushes the Session Notes half of the dashboard into the Client web viewer.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Context: a window with the "web" web viewer (Client - wv).
+Called by Manage: Client (loadDashboard) and by Manage: Document (close), so the list is current after a note is closed.
+DO NOT give this script full access. It relies on record-level access: interventionists see their own notes, supervisors their team's, admins everything.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Creation Date: 9/16/26  By: bc</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="86" name="Set Error Capture"><DisableStepCollapsed state="False"/><Set state="True"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Let ( ~d = Get ( CurrentDate ) - 30 ;
+  Year ( ~d ) & "-" & Right ( "0" & Month ( ~d ) ; 2 ) & "-" & Right ( "0" & Day ( ~d ) ; 2 ) )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$cutoff</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[ExecuteSQL ( "SELECT \"__ID\" FROM \"UserAccount\" WHERE \"username\" = ?" ; "" ; "" ; Get ( AccountName ) )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$myId</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[ExecuteSQL ( "SELECT \"role\" FROM \"UserAccount\" WHERE \"username\" = ?" ; "" ; "" ; Get ( AccountName ) )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$roles</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Recent = session date in the last 30 days, plus anything not yet locked however old. sessionDate is stored as YYYY-MM-DD text, so a string comparison is a date comparison and uses the index.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[ExecuteSQL ( "SELECT \"asJSONDashboardArray\" FROM \"SessionNote\" WHERE \"sessionDate\" >= ? OR \"status\" IS NULL OR \"status\" NOT IN ('Final','Void') ORDER BY \"sessionDate\" DESC" ; "" ; "," ; $cutoff )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$notes</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[ExecuteSQL ( "SELECT \"asJSONDashboardArray\" FROM \"SessionNote\" WHERE \"awaitingSupervisor\" = 1 AND \"supervisorUserId\" = ? ORDER BY \"sessionDate\" DESC" ; "" ; "," ; $myId )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$queue</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>ExecuteSQL returns ? on an error - never hand that to JSON.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONSetElement ( "{}"
+; ["notes" ; "[" & If ( Left ( $notes ; 1 ) = "?" ; "" ; $notes ) & "]" ; JSONArray]
+; ["queue" ; "[" & If ( Left ( $queue ; 1 ) = "?" or IsEmpty ( $myId ) ; "" ; $queue ) & "]" ; JSONArray]
+; ["cutoff" ; $cutoff ; JSONString]
+; ["sqlError" ; Left ( $notes ; 1 ) = "?" ; JSONBoolean]
+; ["me.id" ; $myId ; JSONString]
+; ["me.isSupervisor" ; PatternCount ( $roles ; "Supervisor" ) > 0 ; JSONBoolean]
+; ["me.isAdmin" ; PatternCount ( $roles ; "\"Admin\"" ) > 0 or Get ( AccountPrivilegeSetName ) = "[Full Access]" or Get ( AccountPrivilegeSetName ) = "Admin" ; JSONBoolean]
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$payload</Name></Step>
+<Step enable="True" id="175" name="Perform JavaScript in Web Viewer"><DisableStepCollapsed state="False"/><ObjectName><Calculation><![CDATA["web"]]></Calculation></ObjectName><FunctionName><Calculation><![CDATA["loadDashboardNotes"]]></Calculation></FunctionName><Parameters Count="1"><P><Calculation><![CDATA[$payload]]></Calculation></P></Parameters></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[True]]></Calculation></Step>
+</fmxmlsnippet>

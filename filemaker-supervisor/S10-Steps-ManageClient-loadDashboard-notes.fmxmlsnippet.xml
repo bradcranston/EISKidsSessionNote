@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Session Notes half of the dashboard.</Text></Step>
+<Step enable="True" id="1" name="Perform Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Script id="0" name="Dashboard: Session Notes"/></Step>
+</fmxmlsnippet>

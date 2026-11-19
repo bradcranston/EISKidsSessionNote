@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><StepText>#Rebuild only when pdfFlat is empty (offline seal). Seal If Complete has already rebuilt it otherwise. Rebuilding again here replaced the container while the K: drive queue was exporting it, which left 1 KB unreadable PDFs on K: (Draper REV1, 10/13/26). 10/13/26 bc</StepText><Text>Rebuild only when pdfFlat is empty (offline seal). Seal If Complete has already rebuilt it otherwise. Rebuilding again here replaced the container while the K: drive queue was exporting it, which left 1 KB unreadable PDFs on K: (Draper REV1, 10/13/26). 10/13/26 bc</Text></Step>
+<Step enable="True" id="68" name="If"><Restore state="False"/><Calculation><![CDATA[IsEmpty ( SessionNote::pdfFlat )]]></Calculation></Step>
+<Step enable="True" id="1" name="Perform Script"><Calculation><![CDATA[JSONSetElement ( "" ; ["mode";"saveServer";JSONString] ; ["id";$id;JSONString] )]]></Calculation><Script id="12" name="Manage: Document"/></Step>
+<Step enable="True" id="70" name="End If"></Step>
+</fmxmlsnippet>

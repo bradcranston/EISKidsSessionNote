@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>9/16/26: payroll pays HELD sessions that are FINAL (fully signed) only. Before this, the find was the date range alone, so canceled, no-show, draft and invalid notes were all paid. Void notes are not Final, so a revised session is paid from its revision once that is signed.</Text></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="SessionNote" id="67" name="sessionDateCalc"/><Text>$dates</Text></Criteria><Criteria><Field table="SessionNote" id="58" name="sessionStatus"/><Text>==H - Held</Text></Criteria><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Final</Text></Criteria></RequestRow></Query></Step>
+</fmxmlsnippet>

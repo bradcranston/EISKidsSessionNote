@@ -10,9 +10,60 @@
   </head>
   <body>
     <div class="container">
+      <div class="page-header">
+        <h1><span>EIS Session Note</span><span id="headerStatus"></span></h1>
+        <div id="documentActionsBar" class="document-actions-bar">
+          <div class="doc-actions-online">
+            <button type="button" id="emailPdfBtn" class="btn-doc-action btn-doc-online">
+              <span class="btn-doc-icon">&#9993;</span>Email PDF
+            </button>
+            <button type="button" id="createPdfBtn" class="btn-doc-action btn-doc-online">
+              <span class="btn-doc-icon">&#128196;</span>Create PDF
+            </button>
+            <button type="button" id="copyParentSignatureLinkBtn" class="btn-doc-action btn-doc-online">
+              <span class="btn-doc-icon">&#128279;</span>Copy Caregiver Signature Link
+            </button>
+          </div>
+          <div class="doc-actions-right">
+            <button type="button" id="lockCheckBtn" class="btn-doc-action" title="See what this note still needs before it can lock" hidden>
+              <span class="btn-doc-icon">&#128274;</span>Check &amp; Lock
+            </button>
+            <button type="button" id="reviseNoteBtn" class="btn-doc-action" title="Create a revised copy of this note" hidden>
+              <span class="btn-doc-icon">&#9998;</span>Revise Note
+            </button>
+            <button type="button" id="refreshBtn" class="btn-doc-action" title="Refresh">
+              <span class="btn-doc-icon">&#8635;</span>Refresh
+            </button>
+            <button type="button" id="closeDocBtn" class="btn-doc-action btn-doc-close" title="Close">
+              <span class="btn-doc-icon">&#10005;</span>Close
+            </button>
+          </div>
+        </div>
+      </div>
       <div id="viewOnlyBanner">VIEW ONLY — This session note cannot be edited</div>
-      <h1><span>EIS Session Note</span><span id="headerStatus"></span></h1>
+      <div id="voidBanner" class="revision-banner revision-banner--void" hidden></div>
+      <div id="emailStatusBanner" class="email-status-banner" hidden></div>
+      <div id="revisionBanner" class="revision-banner" hidden>
+        <div id="revisionBannerTitle" class="revision-banner-title"></div>
+        <div id="revisionBannerReason" class="revision-banner-reason"></div>
+        <details id="revisionChangesPanel" class="revision-changes">
+          <summary>Changes from the original</summary>
+          <ul id="revisionChangesList"></ul>
+        </details>
+      </div>
       
+      <!-- 11/5/26: unsaved changes found from before the form reloaded (see DRAFTS in index.js) -->
+      <div id="draftBanner" class="draft-banner" role="alert" hidden>
+        <div class="draft-banner-text">
+          <div id="draftBannerTitle" class="draft-banner-title">Unsaved changes found</div>
+          <div id="draftBannerDetail" class="draft-banner-detail"></div>
+        </div>
+        <div class="draft-banner-actions">
+          <button type="button" id="draftRestoreBtn" class="draft-banner-btn draft-banner-btn--primary">Restore</button>
+          <button type="button" id="draftDiscardBtn" class="draft-banner-btn">Discard</button>
+        </div>
+      </div>
+
       <form id="sessionNoteForm">
         <div id="validationSummary" class="validation-summary" style="display:none;"></div>
         <!-- Header: County, Staff ID, Travel -->
@@ -30,11 +81,9 @@
                 <option value="Cumberland/Perry">
                 <option value="Dauphin">
                 <option value="Delaware">
+                <option value="Franklin/Fulton">
                 <option value="Lancaster">
-                <option value="Lebanon">
-                <option value="Schuylkill">
                 <option value="Washington">
-                <option value="Westmoreland">
                 <option value="York/Adams">
               </datalist>
             </div>
@@ -161,7 +210,6 @@
                 <option value="Daycare">Daycare</option>
                 <option value="Community">Community</option>
                 <option value="Teleintervention">Teleintervention</option>
-                <option value="Other">Other</option>
               </select>
             </div>
             
@@ -226,29 +274,9 @@
           </div>
                     
           <div class="form-group full-width">
-            <label>What we did today to address the outcome(s) and reach session targets:</label>
-            <div class="prompt-subfields" id="whatWeDidTodaySubfields">
-              <div class="prompt-subfield" id="wwdtReviewNote" style="display:none;">
-                <p class="prompt-subfield-note">Review/Teaming sessions: include activities outside of discussing progress and goals.</p>
-              </div>
-              <div class="prompt-subfield">
-                <label class="prompt-subfield-label">What routines were practiced to embed strategies to support child learning?</label>
-                <textarea id="whatWeDidToday_q1" class="prompt-subfield-input" rows="2"></textarea>
-              </div>
-              <div class="prompt-subfield">
-                <label class="prompt-subfield-label">What strategies were used?</label>
-                <textarea id="whatWeDidToday_q2" class="prompt-subfield-input" rows="2"></textarea>
-              </div>
-              <div class="prompt-subfield">
-                <label class="prompt-subfield-label">How did the family participate and how did the child participate?</label>
-                <textarea id="whatWeDidToday_q3" class="prompt-subfield-input" rows="2"></textarea>
-              </div>
-              <div class="prompt-subfield" id="wwdtTelehealthPrompt" style="display:none;">
-                <label class="prompt-subfield-label">What was the reason the session was held via TI instead of in-person?</label>
-                <textarea id="whatWeDidToday_q4" class="prompt-subfield-input" rows="2"></textarea>
-              </div>
-            </div>
-            <textarea id="whatWeDidToday" name="whatWeDidToday" class="prompt-combined" rows="5"></textarea>
+            <label>What we did today to address the outcome(s) and reach session targets: What routines were practiced to embed strategies to support child learning? Include how intervention was embedded within activities and routines, family participation and how strategies were used.</label>
+            <p class="prompt-subfield-note" id="wwdtReviewNote" style="display:none;">Review/Teaming sessions: include activities outside of discussing progress and goals.</p>
+            <textarea id="whatWeDidToday" name="whatWeDidToday" rows="5" maxlength="1233"></textarea>
           </div>
 
           <hr style="margin: 20px 0; border: none; border-top: 2px solid #ccc;" />
@@ -434,6 +462,7 @@
           <div class="form-row">
             <div class="form-group signature-group">
               <label for="parentSignature">Parent/Caregiver Signature:</label>
+              <span class="signature-hint" id="parentSignatureHint">The interventionist signs first. The note saves and locks as soon as the caregiver finishes signing.</span>
               <div class="signature-wrapper">
                 <canvas id="parentSignature" class="signature-pad"></canvas>
                 <div class="signature-activate-overlay" id="parentSignatureOverlay">
@@ -470,19 +499,124 @@
             </div>
           </div>
 
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="schedulingNotes">Scheduling Notes:</label>
+              <textarea id="schedulingNotes" name="schedulingNotes" rows="2" placeholder="Required when there is no next session date or time - e.g. &quot;Discharge&quot;"></textarea>
+            </div>
+          </div>
+
         </section>
 
         <!-- Form Actions -->
         <input type="hidden" id="alert" name="alert" />
         <input type="hidden" id="duration" name="duration" />
+        <!-- Set true when every required field passes validation except the signatures -->
+        <input type="hidden" id="awaitingSignaturesOnly" name="awaitingSignaturesOnly" />
       </form>
+
+      <!-- Supervisor signature. Outside the form on purpose: the note is already
+           locked (view-only) by the time a supervisor signs. -->
+      <section id="supervisorSection" class="form-section supervisor-section" hidden>
+        <h2>Supervisor Signature</h2>
+        <div id="supSigSigned" class="supervisor-signed" hidden>
+          <img id="supSigImage" alt="Supervisor signature" />
+          <div id="supSigSignedBy" class="supervisor-signed-by"></div>
+        </div>
+        <div id="supSigWaiting" class="supervisor-waiting" hidden></div>
+        <div id="supSigArea" hidden>
+          <p class="signature-hint">Sign below to approve this note. It is then filed to the K: drive.</p>
+          <div class="signature-wrapper">
+            <canvas id="supervisorSignature" class="signature-pad"></canvas>
+            <div class="signature-activate-overlay" id="supervisorSignatureOverlay">
+              <span>Tap to Sign</span>
+            </div>
+            <button type="button" class="btn-clear-signature" id="clearSupervisorSignature">Clear</button>
+          </div>
+          <span class="error-msg" id="supervisorSignatureError"></span>
+          <button type="button" id="supervisorSignBtn" class="btn-primary supervisor-sign-btn">Sign as Supervisor</button>
+        </div>
+      </section>
     </div>
 
     <div id="floatingSaveBar">
       <button type="submit" form="sessionNoteForm" class="btn-primary">Save Session Note</button>
     </div>
 
+    <div id="saveProgress" role="status" aria-live="polite">
+      <div class="save-progress-box">
+        <div class="save-progress-label" id="saveProgressLabel">Saving...</div>
+        <div class="save-progress-track">
+          <div class="save-progress-fill" id="saveProgressFill"></div>
+        </div>
+        <div class="save-progress-step" id="saveProgressStep"></div>
+        <button type="button" class="save-progress-dismiss" id="saveProgressDismiss">Close</button>
+      </div>
+    </div>
+
     <div id="saveToast">&#10003; Session note saved</div>
+    <div id="copyLinkToast">&#128279; Signature link copied</div>
+
+    <div id="unsavedChangesModal" class="modal-overlay">
+      <div class="modal-box">
+        <p>You have unsaved changes. Save the session note first?</p>
+        <div class="modal-actions">
+          <button type="button" id="unsavedChangesCancelBtn" class="btn-modal-secondary">Don't Save</button>
+          <button type="button" id="unsavedChangesSaveBtn" class="btn-modal-primary">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="refreshConfirmModal" class="modal-overlay">
+      <div class="modal-box">
+        <p>You have unsaved changes. Tap Save to keep them, or Refresh to discard your changes and reload the last saved version.</p>
+        <div class="modal-actions">
+          <button type="button" id="refreshConfirmDiscardBtn" class="btn-modal-secondary">Refresh Without Saving</button>
+          <button type="button" id="refreshConfirmSaveBtn" class="btn-modal-primary">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11/10/26: the caregiver pad used to lock the note on the first touch
+         outside it, so a finger sliding off mid-signature finalized the note. -->
+    <div id="caregiverDoneModal" class="modal-overlay">
+      <div class="modal-box">
+        <p class="modal-title" id="caregiverDoneTitle">Has the caregiver finished signing?</p>
+        <p class="modal-text" id="caregiverDoneText">Finalizing saves and locks this note.</p>
+        <div class="modal-actions">
+          <button type="button" id="caregiverDoneKeepBtn" class="btn-modal-secondary">Keep Signing</button>
+          <button type="button" id="caregiverDoneFinalizeBtn" class="btn-modal-primary">Finalize Note</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="lockCheckModal" class="modal-overlay">
+      <div class="modal-box modal-box--wide">
+        <p class="modal-title" id="lockCheckTitle"></p>
+        <p class="modal-text" id="lockCheckText"></p>
+        <ul id="lockCheckList" class="lock-check-list"></ul>
+        <div class="modal-actions">
+          <button type="button" id="lockCheckCloseBtn" class="btn-modal-secondary">Close</button>
+          <button type="button" id="lockCheckLockBtn" class="btn-modal-primary" hidden>Lock Note</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="reviseNoteModal" class="modal-overlay">
+      <div class="modal-box modal-box--wide">
+        <p class="modal-title">Revise this session note?</p>
+        <p class="modal-text">The current note will be <strong>voided</strong> and a copy opened for you to correct.
+          Every change is listed on a second page of the PDF, and the caregiver, interventionist and
+          supervisor (if applicable) must all sign the revision.</p>
+        <label for="reviseReason" class="modal-label">Reason for revision</label>
+        <textarea id="reviseReason" rows="3" placeholder="e.g. Wrong session date entered"></textarea>
+        <div id="reviseReasonError" class="modal-error" hidden>Please enter a reason for the revision.</div>
+        <div class="modal-actions">
+          <button type="button" id="reviseCancelBtn" class="btn-modal-secondary">Cancel</button>
+          <button type="button" id="reviseConfirmBtn" class="btn-modal-primary">Void &amp; Revise</button>
+        </div>
+      </div>
+    </div>
 
     <script type="module">
       import "./src/index.js";

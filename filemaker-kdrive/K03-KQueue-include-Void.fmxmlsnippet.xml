@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><StepText>#10/20/26 bc: voided originals also go to K: (the VOID-watermarked copy). Before this, a note revised before the queue ran was voided while still unarchived and never reached the client file.</StepText><Text>10/20/26 bc: voided originals also go to K: (the VOID-watermarked copy). Before this, a note revised before the queue ran was voided while still unarchived and never reached the client file.</Text></Step>
+<Step enable="True" id="28" name="Perform Find"><StepText>Perform Find [ Specified Find Requests: Find Records; Criteria: SessionNote::status: “==Final”
+Find Records; Criteria: SessionNote::status: “==Void”
+Omit Records; Criteria: SessionNote::savedToKDrive: “1”
+Omit Records; Criteria: SessionNote::awaitingSupervisor: “1” ]
+[ Restore ]</StepText><Restore state="True"/><Query>
+<RequestRow operation="Include"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Final</Text></Criteria></RequestRow>
+<RequestRow operation="Include"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Void</Text></Criteria></RequestRow>
+<RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="94" name="savedToKDrive"/><Text>1</Text></Criteria></RequestRow>
+<RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="115" name="awaitingSupervisor"/><Text>1</Text></Criteria></RequestRow>
+</Query></Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#END K03</StepText><Text>END K03</Text></Step>
+</fmxmlsnippet>

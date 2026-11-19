@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)">
+						<StepText>#A signature just landed, so this may have been the last one outstanding.
+&quot;SessionNote: Seal If Complete&quot; decides that. It is safe to call every time:
+a note that is already sealed, or that is still missing something, exits
+without changing anything.
+Commit first so the script reads what was just written.</StepText>
+						<DisableStepCollapsed state="False"/>
+						<Restore state="False"/>
+						<Text>A signature just landed, so this may have been the last one outstanding.
+&quot;SessionNote: Seal If Complete&quot; decides that. It is safe to call every time:
+a note that is already sealed, or that is still missing something, exits
+without changing anything.
+Commit first so the script reads what was just written.</Text>
+					</Step>
+<Step enable="True" id="75" name="Commit Records/Requests">
+						<StepText>Commit Records/Requests
+[ No dialog ]</StepText>
+						<NoInteract state="True"/>
+						<Option state="False"/>
+						<ESSForceCommit state="False"/>
+						<DisableStepCollapsed state="False"/>
+					</Step>
+<Step enable="False" id="1" name="Perform Script">
+						<StepText>//  Perform Script [ “SessionNote: Seal If Complete”; Parameter: JSONSetElement ( &quot;&quot; ; [&quot;id&quot;;$id;JSONString] ) ]</StepText>
+						<DisableStepCollapsed state="False"/>
+						<Calculation><![CDATA[JSONSetElement ( "" ; ["id";$id;JSONString] )]]></Calculation>
+						<DisplayCalculation>
+							<Chunk type="FunctionRef">JSONSetElement</Chunk>
+							<Chunk type="NoRef"> ( &quot;&quot; ; [&quot;id&quot;;$id;</Chunk>
+							<Chunk type="FunctionRef">JSONString</Chunk>
+							<Chunk type="NoRef">] )</Chunk>
+						</DisplayCalculation>
+						<Script id="161" name="SessionNote: Seal If Complete"/>
+					</Step>
+<Step enable="True" id="89" name="# (comment)">
+						<StepText>#Seal runs on the server WITHOUT waiting. BetterForms waits for this script to return, and sealing (PDF, lock, family email, K: drive) took long enough that the Data API connection was reset (ECONNRESET) after the caregiver signed. The signature is already committed above, and Seal If Complete is safe to call repeatedly, so a scheduled sweep can retry any note that did not seal.</StepText>
+						<DisableStepCollapsed state="False"/>
+						<Restore state="False"/>
+						<Text>Seal runs on the server WITHOUT waiting. BetterForms waits for this script to return, and sealing (PDF, lock, family email, K: drive) took long enough that the Data API connection was reset (ECONNRESET) after the caregiver signed. The signature is already committed above, and Seal If Complete is safe to call repeatedly, so a scheduled sweep can retry any note that did not seal.</Text>
+					</Step>
+<Step enable="True" id="164" name="Perform Script on Server">
+						<StepText>Perform Script on Server [ “SessionNote: Seal If Complete”; Parameter: JSONSetElement ( &quot;&quot; ; [&quot;id&quot;;$id;JSONString] ) ]</StepText>
+						<WaitForCompletion state="False"/>
+						<DisableStepCollapsed state="False"/>
+						<Calculation><![CDATA[JSONSetElement ( "" ; ["id";$id;JSONString] )]]></Calculation>
+						<DisplayCalculation>
+							<Chunk type="FunctionRef">JSONSetElement</Chunk>
+							<Chunk type="NoRef"> ( &quot;&quot; ; [&quot;id&quot;;$id;</Chunk>
+							<Chunk type="FunctionRef">JSONString</Chunk>
+							<Chunk type="NoRef">] )</Chunk>
+						</DisplayCalculation>
+						<Script id="161" name="SessionNote: Seal If Complete"/>
+					</Step>
+</fmxmlsnippet>

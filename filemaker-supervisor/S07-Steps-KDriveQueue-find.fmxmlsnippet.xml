@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>9/16/26: locked notes still waiting on the supervisor stay out of the archive until they sign.</Text></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Final</Text></Criteria></RequestRow><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="94" name="savedToKDrive"/><Text>1</Text></Criteria></RequestRow><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="0" name="awaitingSupervisor"/><Text>1</Text></Criteria></RequestRow></Query></Step>
+</fmxmlsnippet>

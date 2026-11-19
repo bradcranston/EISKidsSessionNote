@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Report this step back to the web viewer. "seal" is only filled on the commit step (9/17/26).</Text></Step>
+<Step enable="True" id="175" name="Perform JavaScript in Web Viewer"><DisableStepCollapsed state="False"/><ObjectName><Calculation><![CDATA["web"]]></Calculation></ObjectName><FunctionName><Calculation><![CDATA["saveProgress"]]></Calculation></FunctionName><Parameters Count="1"><P><Calculation><![CDATA[JSONSetElement ( "{}"
+	; [ "saveId" ; $saveId ; JSONString ]
+	; [ "seq" ; $seq ; JSONNumber ]
+	; [ "step" ; $step ; JSONString ]
+	; [ "ok" ; If ( $err = 0 ; 1 ; 0 ) ; JSONBoolean ]
+	; [ "error" ; $err ; JSONNumber ]
+	; [ "skipped" ; Substitute ( $skipped ; Char ( 13 ) ; ", " ) ; JSONString ]
+	; [ "message" ; If ( $err = 0 ; "" ;
+			"FileMaker error " & $err
+			& If ( IsEmpty ( $errDetail ) ; "" ; " on " & $errDetail )
+			& ". Your changes are still on screen - try saving again." ) ; JSONString ]
+	; [ "seal" ; If ( Left ( $seal ; 1 ) = "{" ; $seal ; "{}" ) ; JSONObject ]
+)]]></Calculation></P></Parameters></Step>
+</fmxmlsnippet>

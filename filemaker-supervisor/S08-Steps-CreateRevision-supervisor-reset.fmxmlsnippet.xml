@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>The revision is signed again from scratch, supervisor included.</Text></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="0" name="supervisorUserId"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="0" name="awaitingSupervisor"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="0" name="supervisorName"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="0" name="supervisorCredentials"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="0" name="supervisorSignedTS"/></Step>
+</fmxmlsnippet>

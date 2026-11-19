@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Description: reports voided session notes, one row per voided original, beside the note that replaced it.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>PARAMETER mode "batch" (default) - {"folder": "&lt;folder ending in a slash&gt;"}
+  Called at the end of the billing export (Manage: Export, sessionNotes) AFTER that batch is marked exported. Writes revisions.xlsx for the billing team and marks each row voidReported so it is only sent once.
+PARAMETER mode "range" - {"mode": "range", "startDate": "9/1/2026", "endDate": "9/30/2026"}
+  Called from the client app's Export dialog (Voided Notes Report). Every note VOIDED in the date range, whether or not billing has seen it. Asks for a folder, writes VoidedNotes_&lt;start&gt;_to_&lt;end&gt;.xlsx and changes nothing.
+RESULT: number of rows written</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Batch mode reports a voided original only when:
+- it had itself been exported (billing never saw one that was not - nothing to void), and
+- the revision that finally replaced it has been exported too, so billing receives the void and the replacement together. A revision still waiting on signatures holds its row back to a later batch.
+Both modes follow a revision chain to the newest note.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Creation Date: 9/16/26  By: bc</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="86" name="Set Error Capture"><DisableStepCollapsed state="False"/><Set state="True"/></Step>
+<Step enable="True" id="85" name="Allow User Abort"><DisableStepCollapsed state="False"/><Set state="False"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Get ( ScriptParameter )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$param</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[If ( JSONGetElement ( $param ; "mode" ) = "range" ; "range" ; "batch" )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$mode</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONGetElement ( $param ; "folder" )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$folder</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[0]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$rows</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Get ( UUIDNumber )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$exportId</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$mode = "range"]]></Calculation></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONGetElement ( $param ; "startDate" )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$startDate</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONGetElement ( $param ; "endDate" )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$endDate</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>voidedTS is a timestamp - cover the whole of both days</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[$startDate & " 12:00:00 AM..." & $endDate & " 11:59:59 PM"]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$range</Name></Step>
+<Step enable="True" id="181" name="Get Folder Path"><DisableStepCollapsed state="False"/><AllowFolderCreation state="True"/><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><DialogTitle><Calculation><![CDATA["Save Voided Notes Report To"]]></Calculation></DialogTitle><DefaultLocation><Calculation><![CDATA[Get ( DesktopPath )]]></Calculation></DefaultLocation><Name>$folder</Name></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[Get ( LastError ) <> 0 or IsEmpty ( $folder )]]></Calculation></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[0]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="122" name="New Window"><DisableStepCollapsed state="False"/><LayoutDestination value="SelectedLayout"/><NewWndStyles DimParentWindow="Yes" Toolbars="No" MenuBar="No" Style="Card" Close="No" Minimize="No" Maximize="No" Resize="No" Styles="3222274064"/><Layout id="10" name="SessionNote - Processing"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="6" name="Go to Layout"><DisableStepCollapsed state="False"/><LayoutDestination value="SelectedLayout"/><Layout id="10" name="SessionNote - Processing"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$mode = "range"]]></Calculation></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Void</Text></Criteria><Criteria><Field table="SessionNote" id="0" name="voidedTS"/><Text>$range</Text></Criteria></RequestRow></Query></Step>
+<Step enable="True" id="69" name="Else"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Void</Text></Criteria><Criteria><Field table="SessionNote" id="88" name="exported"/><Text>1</Text></Criteria></RequestRow><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="0" name="voidReported"/><Text>1</Text></Criteria></RequestRow></Query></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[Get ( LastError ) <> 0 or Get ( FoundCount ) = 0]]></Calculation></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$mode = "range"]]></Calculation></Step>
+<Step enable="True" id="87" name="Show Custom Dialog"><DisableStepCollapsed state="False"/><Title><Calculation><![CDATA["Voided Notes Report"]]></Calculation></Title><Message><Calculation><![CDATA["No session notes were voided between " & $startDate & " and " & $endDate & "."]]></Calculation></Message><Buttons><Button CommitState="True"><Calculation><![CDATA["OK"]]></Calculation></Button><Button CommitState="False"/><Button CommitState="False"/></Buttons></Step>
+<Step enable="True" id="121" name="Close Window"><DisableStepCollapsed state="False"/><LimitToWindowsOfCurrentFile state="True"/><Window value="Current"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[0]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="16" name="Go to Record/Request/Page"><NoInteract state="True"/><DisableStepCollapsed state="False"/><RowPageLocation value="First"/></Step>
+<Step enable="True" id="71" name="Loop"><DisableStepCollapsed state="False"/><Restore state="False"/><FlushType value="Always"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Newest note in the revision chain</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[While ( [
+    ~id = SessionNote::supersededBy_Id
+  ; ~guard = 0
+] ;
+  ~guard < 50 ;
+[
+    ~next = ExecuteSQL ( "SELECT \"supersededBy_Id\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; ~id )
+  ; ~guard = If ( IsEmpty ( ~next ) ; 50 ; ~guard + 1 )
+  ; ~id = If ( IsEmpty ( ~next ) ; ~id ; ~next )
+] ;
+  ~id
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$latestId</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[GetAsNumber ( ExecuteSQL ( "SELECT \"exported\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ) = 1]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$latestExported</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$mode = "range" or ( not IsEmpty ( $latestId ) and $latestExported )]]></Calculation></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Original (this record)</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONSetElement ( "{}"
+; ["Client Last Name" ; SessionNote::clientLastName ; JSONString]
+; ["Client First Name" ; SessionNote::clientFirstName ; JSONString]
+; ["Local ID" ; SessionNote::localId ; JSONString]
+; ["County" ; SessionNote::county ; JSONString]
+; ["Staff ID" ; SessionNote::staffId ; JSONString]
+; ["Interventionist" ; SessionNote::eIFirstName & " " & SessionNote::eILastName ; JSONString]
+; ["Original Session Date" ; GetAsText ( SessionNote::sessionDateCalc ) ; JSONString]
+; ["Original Start" ; SessionNote::sessionStartTime ; JSONString]
+; ["Original End" ; SessionNote::sessionEndTime ; JSONString]
+; ["Original Units" ; SessionNote::serviceUnits ; JSONString]
+; ["Original Service Code" ; SessionNote::serviceCode ; JSONString]
+; ["Original Session Status" ; SessionNote::sessionStatus ; JSONString]
+; ["Original Exported On" ; If ( SessionNote::exported = 1 ; GetAsText ( SessionNote::exportedTS ) ; "Never exported" ) ; JSONString]
+; ["Voided On" ; GetAsText ( SessionNote::voidedTS ) ; JSONString]
+; ["Voided By" ; SessionNote::voidedBy ; JSONString]
+; ["Reported To Billing On" ; Case (
+      $mode = "batch" ; GetAsText ( Get ( CurrentTimestamp ) ) ;
+      SessionNote::voidReported = 1 ; GetAsText ( SessionNote::voidReportedTS ) ;
+      SessionNote::exported = 1 ; "Not yet - waiting on revision" ;
+      "Not needed - never exported" ) ; JSONString]
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$o</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Replacement (newest revision)</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[ExecuteSQL ( "SELECT \"sessionDate\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$revDate</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONSetElement ( "{}"
+; ["Revision Number" ; ExecuteSQL ( "SELECT \"revisionNumber\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Revised Session Date" ; If ( Middle ( $revDate ; 5 ; 1 ) = "-" ; GetAsNumber ( Middle ( $revDate ; 6 ; 2 ) ) & "/" & GetAsNumber ( Middle ( $revDate ; 9 ; 2 ) ) & "/" & Left ( $revDate ; 4 ) ; $revDate ) ; JSONString]
+; ["Revised Start" ; ExecuteSQL ( "SELECT \"sessionStartTime\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Revised End" ; ExecuteSQL ( "SELECT \"sessionEndTime\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Revised Units" ; ExecuteSQL ( "SELECT \"serviceUnits\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Revised Service Code" ; ExecuteSQL ( "SELECT \"serviceCode\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Revised Session Status" ; ExecuteSQL ( "SELECT \"sessionStatus\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Revision Reason" ; ExecuteSQL ( "SELECT \"revisionReason\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Changes" ; ExecuteSQL ( "SELECT \"changeLog\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ; JSONString]
+; ["Replacement Note Status" ; Let ( ~s = ExecuteSQL ( "SELECT \"status\" FROM \"SessionNote\" WHERE \"__ID\" = ?" ; "" ; "" ; $latestId ) ;
+      Case ( IsEmpty ( $latestId ) ; "No replacement found" ; ~s = "Final" ; "Final (signed)" ; ~s = "draft" ; "Awaiting signatures" ; ~s ) ) ; JSONString]
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$n</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="6" name="Go to Layout"><DisableStepCollapsed state="False"/><LayoutDestination value="SelectedLayout"/><Layout id="0" name="ExportRevision - Processing"/></Step>
+<Step enable="True" id="7" name="New Record/Request"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[$exportId]]></Calculation><Field table="ExportRevision" id="0" name="exportId"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Client Last Name" )]]></Calculation><Field table="ExportRevision" id="0" name="Client Last Name"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Client First Name" )]]></Calculation><Field table="ExportRevision" id="0" name="Client First Name"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Local ID" )]]></Calculation><Field table="ExportRevision" id="0" name="Local ID"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "County" )]]></Calculation><Field table="ExportRevision" id="0" name="County"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Staff ID" )]]></Calculation><Field table="ExportRevision" id="0" name="Staff ID"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Interventionist" )]]></Calculation><Field table="ExportRevision" id="0" name="Interventionist"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original Session Date" )]]></Calculation><Field table="ExportRevision" id="0" name="Original Session Date"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original Start" )]]></Calculation><Field table="ExportRevision" id="0" name="Original Start"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original End" )]]></Calculation><Field table="ExportRevision" id="0" name="Original End"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original Units" )]]></Calculation><Field table="ExportRevision" id="0" name="Original Units"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original Service Code" )]]></Calculation><Field table="ExportRevision" id="0" name="Original Service Code"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original Session Status" )]]></Calculation><Field table="ExportRevision" id="0" name="Original Session Status"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Original Exported On" )]]></Calculation><Field table="ExportRevision" id="0" name="Original Exported On"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Voided On" )]]></Calculation><Field table="ExportRevision" id="0" name="Voided On"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Voided By" )]]></Calculation><Field table="ExportRevision" id="0" name="Voided By"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revision Number" )]]></Calculation><Field table="ExportRevision" id="0" name="Revision Number"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revised Session Date" )]]></Calculation><Field table="ExportRevision" id="0" name="Revised Session Date"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revised Start" )]]></Calculation><Field table="ExportRevision" id="0" name="Revised Start"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revised End" )]]></Calculation><Field table="ExportRevision" id="0" name="Revised End"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revised Units" )]]></Calculation><Field table="ExportRevision" id="0" name="Revised Units"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revised Service Code" )]]></Calculation><Field table="ExportRevision" id="0" name="Revised Service Code"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revised Session Status" )]]></Calculation><Field table="ExportRevision" id="0" name="Revised Session Status"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Revision Reason" )]]></Calculation><Field table="ExportRevision" id="0" name="Revision Reason"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Changes" )]]></Calculation><Field table="ExportRevision" id="0" name="Changes"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $n ; "Replacement Note Status" )]]></Calculation><Field table="ExportRevision" id="0" name="Replacement Note Status"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $o ; "Reported To Billing On" )]]></Calculation><Field table="ExportRevision" id="0" name="Reported To Billing On"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="6" name="Go to Layout"><DisableStepCollapsed state="False"/><LayoutDestination value="SelectedLayout"/><Layout id="10" name="SessionNote - Processing"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$mode = "batch"]]></Calculation></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[1]]></Calculation><Field table="SessionNote" id="0" name="voidReported"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[Get ( CurrentTimestamp )]]></Calculation><Field table="SessionNote" id="0" name="voidReportedTS"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[$rows + 1]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$rows</Name></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="16" name="Go to Record/Request/Page"><NoInteract state="True"/><Exit state="True"/><DisableStepCollapsed state="False"/><RowPageLocation value="Next"/></Step>
+<Step enable="True" id="73" name="End Loop"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$rows > 0]]></Calculation></Step>
+<Step enable="True" id="6" name="Go to Layout"><DisableStepCollapsed state="False"/><LayoutDestination value="SelectedLayout"/><Layout id="0" name="ExportRevision - Processing"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[$exportId]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$find</Name></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="ExportRevision" id="0" name="exportId"/><Text>$find</Text></Criteria></RequestRow></Query></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[If ( $mode = "range" ;
+  $folder & "VoidedNotes_" & Substitute ( $startDate ; "/" ; "-" ) & "_to_" & Substitute ( $endDate ; "/" ; "-" ) & ".xlsx" ;
+  $folder & "revisions.xlsx" )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$path</Name></Step>
+<Step enable="True" id="36" name="Export Records"><NoInteract state="True"/><CreateDirectories state="True"/><DisableStepCollapsed state="False"/><Restore state="True"/><AutoOpen state="True"/><CreateEmail state="False"/><Profile FieldDelimiter="&#9;" IsPredefined="-1" FieldNameRow="-1" DataType="XLXE"/><UniversalPathList>$path</UniversalPathList><UseFieldNames state="False"/><ExportOptions FormatUsingCurrentLayout="False" CharacterSet="Unicode"/><ExportEntries><ExportEntry><Field table="ExportRevision" id="0" name="Client Last Name"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Client First Name"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Local ID"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="County"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Staff ID"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Interventionist"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original Session Date"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original Start"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original End"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original Units"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original Service Code"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original Session Status"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Original Exported On"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Voided On"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Voided By"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revision Number"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revised Session Date"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revised Start"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revised End"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revised Units"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revised Service Code"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revised Session Status"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Revision Reason"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Changes"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Replacement Note Status"/></ExportEntry><ExportEntry><Field table="ExportRevision" id="0" name="Reported To Billing On"/></ExportEntry></ExportEntries></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$mode = "range"]]></Calculation></Step>
+<Step enable="True" id="121" name="Close Window"><DisableStepCollapsed state="False"/><LimitToWindowsOfCurrentFile state="True"/><Window value="Current"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[$rows]]></Calculation></Step>
+</fmxmlsnippet>

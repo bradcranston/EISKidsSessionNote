@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>10/1/26: recover notes stuck on Sending. The send script commits Sending before it rebuilds the PDF and sends; if that run is cut off (e.g. the MirrorSync Data API session ends mid-send) the note stays on Sending forever, because neither this queue nor the send script will pick it up. Anything on Sending for more than 15 minutes is marked Failed so the normal retry below (emailAttempts &lt; 3) sends it. Records someone has open are left for the next run.</Text></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>==Final</Text></Criteria><Criteria><Field table="SessionNote" id="120" name="emailStatus"/><Text>==Sending</Text></Criteria></RequestRow></Query></Step>
+</fmxmlsnippet>

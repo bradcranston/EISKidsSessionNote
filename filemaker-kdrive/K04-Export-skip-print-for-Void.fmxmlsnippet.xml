@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><StepText>#10/20/26 bc: a voided note is archived to the client file only. It never gets a county print copy.</StepText><Text>10/20/26 bc: a voided note is archived to the client file only. It never gets a county print copy.</Text></Step>
+<Step enable="True" id="68" name="If"><StepText>If [ SessionNote::status = "Void" ]</StepText><Restore state="False"/><Calculation><![CDATA[SessionNote::status = "Void"]]></Calculation></Step>
+<Step enable="True" id="103" name="Exit Script"><StepText>Exit Script [ Result: $scriptResult ]</StepText><Calculation><![CDATA[$scriptResult]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><StepText>End If</StepText></Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#END K04</StepText><Text>END K04</Text></Step>
+</fmxmlsnippet>

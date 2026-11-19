@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>10/23/26: Waiting for Sync (sealed offline, now synced) sends like a blank status.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Case (
+  SessionNote::status ≠ "Final" ; "not sealed" ;
+  not IsEmpty ( SessionNote::voidedTS ) ; "voided" ;
+  SessionNote::awaitingSupervisor = 1 ; "awaiting supervisor signature" ;
+  $force ; "" ;
+  SessionNote::emailStatus = "Sent" ; "already sent" ;
+  SessionNote::emailStatus = "Sending" ; "a send is already in progress" ;
+  SessionNote::emailStatus = "Failed" and SessionNote::emailAttempts ≥ $maxAttempts ; "stopped after " & $maxAttempts & " failed attempts" ;
+  not IsEmpty ( SessionNote::emailStatus ) and SessionNote::emailStatus ≠ "Failed" and SessionNote::emailStatus ≠ "Waiting for Sync" ; SessionNote::emailStatus ;
+  ""
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$skip</Name></Step>
+</fmxmlsnippet>

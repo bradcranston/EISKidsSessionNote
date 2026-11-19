@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Description: locks a session note once the interventionist (and caregiver, for a held session) have signed, and routes it to the K: drive once any required supervisor has signed too.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>PARAMETER: {"id": "&lt;SessionNote __ID&gt;", "requirementsMet": true|false}
+RETURNS: {"sealed": true|false, "reason": "...", "awaitingSupervisor": true|false}
+Safe to call on every save and every signature - it only acts when something is ready.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Rules (9/16/26 meeting):
+- H - Held: locks when EI + caregiver have signed and every other requirement passes.
+- Any other session status (canceled / absent): locks when the EI has signed.
+- The supervisor signature does NOT block the lock, payroll or billing. It only holds the note out of the K: drive queue (awaitingSupervisor = 1) until the supervisor signs.
+Change log: 9/16/26 bc - supervisor no longer required to lock; canceled notes need the EI signature only; supervisor ids are UserAccount __IDs.</Text></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="86" name="Set Error Capture"><DisableStepCollapsed state="False"/><Set state="True"/></Step>
+<Step enable="True" id="85" name="Allow User Abort"><DisableStepCollapsed state="False"/><Set state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>------------------------------
+Find the note
+------------------------------</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONGetElement ( Get ( ScriptParameter ) ; "id" )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$id</Name></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[IsEmpty ( $id )]]></Calculation></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";False;JSONBoolean] ; ["reason";"no id in parameter";JSONString] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[Get ( LayoutTableName ) <> "SessionNote" or SessionNote::__ID <> $id]]></Calculation></Step>
+<Step enable="True" id="6" name="Go to Layout"><DisableStepCollapsed state="False"/><LayoutDestination value="SelectedLayout"/><Layout id="3" name="SessionNote"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA["==" & $id]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$find</Name></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Include"><Criteria><Field table="SessionNote" id="1" name="__ID"/><Text>$find</Text></Criteria></RequestRow></Query></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[Get ( FoundCount ) = 0 or SessionNote::__ID <> $id]]></Calculation></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";False;JSONBoolean] ; ["reason";"note not found";JSONString] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[False]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$finishSupervisor</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>------------------------------
+Already locked
+------------------------------
+The only thing left to do on a locked note is finish the supervisor step, once their signature lands (SessionNote: Supervisor Sign, or the BetterForms link).</Text></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[GetAsBoolean ( SessionNote::viewOnly )]]></Calculation></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[SessionNote::awaitingSupervisor = 1 and not IsEmpty ( SessionNote::supervisorSignatureBase64 )]]></Calculation></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[True]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$finishSupervisor</Name></Step>
+<Step enable="True" id="69" name="Else"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";False;JSONBoolean] ; ["reason";"already sealed";JSONString] ; ["awaitingSupervisor";SessionNote::awaitingSupervisor = 1;JSONBoolean] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[not $finishSupervisor]]></Calculation></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>------------------------------
+Requirement 1: everything except signatures
+------------------------------
+Either the widget passes requirementsMet (its validateForm() just passed everything), or it stored awaitingSignaturesOnly = true on an earlier save (every requirement passed except signatures - the route a BetterForms caregiver signature takes).</Text></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[not ( Let ( ~v = JSONGetElement ( Get ( ScriptParameter ) ; "requirementsMet" ) ; ~v = 1 or ~v = "true" ) or Lower ( Trim ( SessionNote::awaitingSignaturesOnly ) ) = "true" )]]></Calculation></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";False;JSONBoolean] ; ["reason";"note still has non-signature requirements outstanding";JSONString] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>------------------------------
+Requirement 2: signatures for this kind of session
+------------------------------
+Test the Base64 fields, not the calculated containers - those can lag a commit.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Trim ( SessionNote::sessionStatus ) = "H - Held"]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$isHeld</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[List (
+  If ( IsEmpty ( SessionNote::eISignatureBase64 ) ; "EI signature" ; "" )
+; If ( $isHeld and IsEmpty ( SessionNote::parentSignatureBase64 ) ; "Parent/caregiver signature" ; "" )
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$missing</Name></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[not IsEmpty ( $missing )]]></Calculation></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";False;JSONBoolean] ; ["reason";"awaiting signatures";JSONString] ; ["missing";Substitute ( $missing ; ¶ ; ", " );JSONString] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>------------------------------
+Lock it
+------------------------------
+Rebuild the PDF first so the stored copy shows every signature collected so far.</Text></Step>
+<Step enable="True" id="164" name="Perform Script on Server"><DisableStepCollapsed state="False"/><WaitForCompletion state="True"/><Calculation><![CDATA[JSONSetElement(""
+;["mode";"saveServer";JSONString]
+;["id";SessionNote::__ID;JSONString]
+)]]></Calculation><Script id="0" name="Manage: Document"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Let ( [
+  ~staff  = SessionNote::staffId
+; ~cf     = Trim ( ExecuteSQL ( "SELECT \"cfSupervisorId\" FROM \"UserAccount\" WHERE \"staffId\" = ?" ; "" ; "" ; ~staff ) )
+; ~cota   = Trim ( ExecuteSQL ( "SELECT \"cotaSupervisorId\" FROM \"UserAccount\" WHERE \"staffId\" = ?" ; "" ; "" ; ~staff ) )
+; ~isCota = Left ( Trim ( SessionNote::serviceCode ) ; 4 ) = "COTA"
+; ~pick   = If ( ~isCota ; ~cota ; ~cf )
+; ~pick   = If ( IsEmpty ( ~pick ) ; If ( ~isCota ; ~cf ; ~cota ) ; ~pick )
+] ;
+JSONSetElement ( ""
+; ["required" ; not IsEmpty ( ~pick ) ; JSONBoolean]
+; ["userId"   ; ~pick ; JSONString]
+)
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$supervisor</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[GetAsBoolean ( JSONGetElement ( $supervisor ; "required" ) )]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$supervisorRequired</Name></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA["Final"]]></Calculation><Field table="SessionNote" id="87" name="status"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[1]]></Calculation><Field table="SessionNote" id="85" name="viewOnly"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$supervisorRequired]]></Calculation></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[IsEmpty ( SessionNote::supervisorUserId )]]></Calculation></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONGetElement ( $supervisor ; "userId" )]]></Calculation><Field table="SessionNote" id="0" name="supervisorUserId"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[IsEmpty ( SessionNote::supervisorSignatureBase64 )]]></Calculation></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Into the supervisor's queue. Not queued for the K: drive until they sign.</Text></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[1]]></Calculation><Field table="SessionNote" id="0" name="awaitingSupervisor"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="94" name="savedToKDrive"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";True;JSONBoolean] ; ["reason";"locked - awaiting supervisor";JSONString] ; ["awaitingSupervisor";True;JSONBoolean] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>The supervisor already signed (link used before the lock) - finish below.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[True]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$finishSupervisor</Name></Step>
+<Step enable="True" id="69" name="Else"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[0]]></Calculation><Field table="SessionNote" id="0" name="awaitingSupervisor"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>No supervisor - straight into the K: drive queue (status Final AND savedToKDrive not 1).</Text></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[0]]></Calculation><Field table="SessionNote" id="94" name="savedToKDrive"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";True;JSONBoolean] ; ["reason";"locked";JSONString] ; ["awaitingSupervisor";False;JSONBoolean] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>------------------------------
+Supervisor has signed - stamp, rebuild, route to the K: drive
+------------------------------
+Name and credentials are copied onto the note so the PDF keeps showing who signed even if the user record changes later.</Text></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$finishSupervisor]]></Calculation></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[SessionNote::supervisorUserId]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$supId</Name></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[Trim ( ExecuteSQL ( "SELECT \"firstName\" FROM \"UserAccount\" WHERE \"__ID\" = ?" ; "" ; "" ; $supId ) & " " & ExecuteSQL ( "SELECT \"lastName\" FROM \"UserAccount\" WHERE \"__ID\" = ?" ; "" ; "" ; $supId ) )]]></Calculation><Field table="SessionNote" id="0" name="supervisorName"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[ExecuteSQL ( "SELECT \"credentials\" FROM \"UserAccount\" WHERE \"__ID\" = ?" ; "" ; "" ; $supId )]]></Calculation><Field table="SessionNote" id="0" name="supervisorCredentials"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[Get ( CurrentTimestamp )]]></Calculation><Field table="SessionNote" id="0" name="supervisorSignedTS"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[0]]></Calculation><Field table="SessionNote" id="0" name="awaitingSupervisor"/></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Empty pdfFlat as well as rebuilding: if the rebuild cannot run (offline), the K: drive export sees no stored file name and rebuilds it on the server.</Text></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><Field table="SessionNote" id="90" name="pdfFlat"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="164" name="Perform Script on Server"><DisableStepCollapsed state="False"/><WaitForCompletion state="True"/><Calculation><![CDATA[JSONSetElement(""
+;["mode";"saveServer";JSONString]
+;["id";SessionNote::__ID;JSONString]
+)]]></Calculation><Script id="0" name="Manage: Document"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[0]]></Calculation><Field table="SessionNote" id="94" name="savedToKDrive"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sealed";True;JSONBoolean] ; ["reason";"supervisor signed";JSONString] ; ["supervisorSigned";True;JSONBoolean] ; ["awaitingSupervisor";False;JSONBoolean] )]]></Calculation></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+</fmxmlsnippet>

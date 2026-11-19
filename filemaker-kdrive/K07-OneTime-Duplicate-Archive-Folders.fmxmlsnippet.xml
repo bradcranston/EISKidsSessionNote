@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><StepText>#ONE-TIME. Lists client folders that exist on both K: (live) and A: (Archive = server K:\Archive). Each is a discharged child whose folder was moved to Archive, after which a session note export rebuilt a new folder on K:. Writes a report .txt to the top of staff K: and shows a summary. Run from any client; the folder work runs on the server. Delete once the cleanup is done. 10/27/26 bc</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Text>ONE-TIME. Lists client folders that exist on both K: (live) and A: (Archive = server K:\Archive). Each is a discharged child whose folder was moved to Archive, after which a session note export rebuilt a new folder on K:. Writes a report .txt to the top of staff K: and shows a summary. Run from any client; the folder work runs on the server. Delete once the cleanup is done. 10/27/26 bc</Text></Step>
+<Step enable="True" id="86" name="Set Error Capture"><StepText>Set Error Capture [ On ]</StepText><Set state="True"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="85" name="Allow User Abort"><StepText>Allow User Abort [ Off ]</StepText><Set state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="68" name="If"><StepText>If [ PatternCount ( Get ( ApplicationVersion ) ; &quot;Server&quot; ) = 0 ]</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[PatternCount ( Get ( ApplicationVersion ) ; "Server" ) = 0]]></Calculation><DisplayCalculation><Chunk type="NoRef">PatternCount ( Get ( ApplicationVersion ) ; &quot;Server&quot; ) = 0</Chunk></DisplayCalculation></Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#On a client: hand off to the server (Macs have no K:), then show the result.</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Text>On a client: hand off to the server (Macs have no K:), then show the result.</Text></Step>
+<Step enable="True" id="164" name="Perform Script on Server"><Calculated><Calculation><![CDATA[Get ( ScriptName )]]></Calculation><DisplayCalculation><Chunk type="NoRef">Get ( ScriptName )</Chunk></DisplayCalculation></Calculated><StepText>Perform Script on Server [ By name; Get ( ScriptName ); Parameter: &quot;&quot; ] [ Wait for completion ]</StepText><WaitForCompletion state="True"/><DisableStepCollapsed state="False"/><Calculation><![CDATA[""]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;&quot;</Chunk></DisplayCalculation></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $result; Value:Get ( ScriptResult ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[Get ( ScriptResult )]]></Calculation><DisplayCalculation><Chunk type="NoRef">Get ( ScriptResult )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$result</Name></Step>
+<Step enable="True" id="68" name="If"><StepText>If [ JSONGetElement ( $result ; &quot;ok&quot; ) = 1 ]</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[JSONGetElement ( $result ; "ok" ) = 1]]></Calculation><DisplayCalculation><Chunk type="NoRef">JSONGetElement ( $result ; &quot;ok&quot; ) = 1</Chunk></DisplayCalculation></Step>
+<Step enable="True" id="87" name="Show Custom Dialog"><StepText>Show Custom Dialog [ Title: &quot;Duplicate Client Folders&quot;; Message: &quot;Checked &quot; &amp; JSONGetElement ( $result ; &quot;checked&quot; ) &amp; &quot; client folders on K:.&quot; &amp; ¶ &amp; &quot;Found &quot; &amp; JSONGetElement ( $result ; &quot;duplicates&quot; ) &amp; &quot; also in Archive.&quot; &amp; ¶ &amp; ¶ &amp; If ( JSONGetElement ( $result ; &quot;writeError&quot; ) = 0 ; &quot;Full list saved to:&quot; &amp; ¶ &amp; Substitute ( JSONGetElement ( $result ; &quot;reportFile&quot; ) ; &quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; Char ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; Char ( 92 ) ; &quot;K:&quot; &amp; Char ( 92 ) ) ; &quot;The report file could not be saved (BaseElements error &quot; &amp; JSONGetElement ( $result ; &quot;writeError&quot; ) &amp; &quot;). The list is below.&quot; &amp; ¶ &amp; ¶ &amp; JSONGetElement ( $result ; &quot;report&quot; ) ); Default Button: “OK”, Commit: “No” ]</StepText><DisableStepCollapsed state="False"/><Title><Calculation><![CDATA["Duplicate Client Folders"]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;Duplicate Client Folders&quot;</Chunk></DisplayCalculation></Title><Message><Calculation><![CDATA["Checked " & JSONGetElement ( $result ; "checked" ) & " client folders on K:." & ¶ & "Found " & JSONGetElement ( $result ; "duplicates" ) & " also in Archive." & ¶ & ¶ & If ( JSONGetElement ( $result ; "writeError" ) = 0 ; "Full list saved to:" & ¶ & Substitute ( JSONGetElement ( $result ; "reportFile" ) ; "K:" & Char ( 92 ) & "Early Intervention Specialists" & Char ( 92 ) & "EIS - Documents" & Char ( 92 ) ; "K:" & Char ( 92 ) ) ; "The report file could not be saved (BaseElements error " & JSONGetElement ( $result ; "writeError" ) & "). The list is below." & ¶ & ¶ & JSONGetElement ( $result ; "report" ) )]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;Checked &quot; &amp; JSONGetElement ( $result ; &quot;checked&quot; ) &amp; &quot; client folders on K:.&quot; &amp; ¶ &amp; &quot;Found &quot; &amp; JSONGetElement ( $result ; &quot;duplicates&quot; ) &amp; &quot; also in Archive.&quot; &amp; ¶ &amp; ¶ &amp; If ( JSONGetElement ( $result ; &quot;writeError&quot; ) = 0 ; &quot;Full list saved to:&quot; &amp; ¶ &amp; Substitute ( JSONGetElement ( $result ; &quot;reportFile&quot; ) ; &quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; Char ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; Char ( 92 ) ; &quot;K:&quot; &amp; Char ( 92 ) ) ; &quot;The report file could not be saved (BaseElements error &quot; &amp; JSONGetElement ( $result ; &quot;writeError&quot; ) &amp; &quot;). The list is below.&quot; &amp; ¶ &amp; ¶ &amp; JSONGetElement ( $result ; &quot;report&quot; ) )</Chunk></DisplayCalculation></Message><Buttons><Button CommitState="False"><Calculation><![CDATA["OK"]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;OK&quot;</Chunk></DisplayCalculation></Button><Button CommitState="False"/><Button CommitState="False"/></Buttons></Step>
+<Step enable="True" id="69" name="Else"><StepText>Else [  ]</StepText><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="87" name="Show Custom Dialog"><StepText>Show Custom Dialog [ Title: &quot;Duplicate Client Folders&quot;; Message: &quot;The check did not finish.&quot; &amp; ¶ &amp; ¶ &amp; If ( IsEmpty ( $result ) ; &quot;No result came back from the server.&quot; ; JSONGetElement ( $result ; &quot;message&quot; ) ); Default Button: “OK”, Commit: “No” ]</StepText><DisableStepCollapsed state="False"/><Title><Calculation><![CDATA["Duplicate Client Folders"]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;Duplicate Client Folders&quot;</Chunk></DisplayCalculation></Title><Message><Calculation><![CDATA["The check did not finish." & ¶ & ¶ & If ( IsEmpty ( $result ) ; "No result came back from the server." ; JSONGetElement ( $result ; "message" ) )]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;The check did not finish.&quot; &amp; ¶ &amp; ¶ &amp; If ( IsEmpty ( $result ) ; &quot;No result came back from the server.&quot; ; JSONGetElement ( $result ; &quot;message&quot; ) )</Chunk></DisplayCalculation></Message><Buttons><Button CommitState="False"><Calculation><![CDATA["OK"]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;OK&quot;</Chunk></DisplayCalculation></Button><Button CommitState="False"/><Button CommitState="False"/></Buttons></Step>
+<Step enable="True" id="70" name="End If"><StepText>End If</StepText><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><StepText>Exit Script [ Result: $result ]</StepText><DisableStepCollapsed state="False"/><Calculation><![CDATA[$result]]></Calculation><DisplayCalculation><Chunk type="NoRef">$result</Chunk></DisplayCalculation></Step>
+<Step enable="True" id="70" name="End If"><StepText>End If</StepText><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#ON THE SERVER</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Text>ON THE SERVER</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $liveRoot; Value:&quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; Char ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; Char ( 92 ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA["K:" & Char ( 92 ) & "Early Intervention Specialists" & Char ( 92 ) & "EIS - Documents" & Char ( 92 )]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; Char ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; Char ( 92 )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$liveRoot</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $archiveRoot; Value:&quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Archive&quot; &amp; Char ( 92 ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA["K:" & Char ( 92 ) & "Archive" & Char ( 92 )]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Archive&quot; &amp; Char ( 92 )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$archiveRoot</Name></Step>
+<Step enable="True" id="68" name="If"><StepText>If [ not BE_FileExists ( $liveRoot &amp; &quot;Client Files - Western&quot; ) or not BE_FileExists ( $archiveRoot &amp; &quot;Client Files - Western&quot; ) ]</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[not BE_FileExists ( $liveRoot & "Client Files - Western" ) or not BE_FileExists ( $archiveRoot & "Client Files - Western" )]]></Calculation><DisplayCalculation><Chunk type="NoRef">not BE_FileExists ( $liveRoot &amp; &quot;Client Files - Western&quot; ) or not BE_FileExists ( $archiveRoot &amp; &quot;Client Files - Western&quot; )</Chunk></DisplayCalculation></Step>
+<Step enable="True" id="103" name="Exit Script"><StepText>Exit Script [ Result: JSONSetElement ( &quot;{}&quot; ; [ &quot;ok&quot; ; 0 ; JSONBoolean ] ; [ &quot;message&quot; ; &quot;The server cannot see &quot; &amp; $liveRoot &amp; &quot;Client Files - Western or &quot; &amp; $archiveRoot &amp; &quot;Client Files - Western. BaseElements error &quot; &amp; BE_GetLastError ; JSONString ] ) ]</StepText><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "{}" ; [ "ok" ; 0 ; JSONBoolean ] ; [ "message" ; "The server cannot see " & $liveRoot & "Client Files - Western or " & $archiveRoot & "Client Files - Western. BaseElements error " & BE_GetLastError ; JSONString ] )]]></Calculation><DisplayCalculation><Chunk type="NoRef">JSONSetElement ( &quot;{}&quot; ; [ &quot;ok&quot; ; 0 ; JSONBoolean ] ; [ &quot;message&quot; ; &quot;The server cannot see &quot; &amp; $liveRoot &amp; &quot;Client Files - Western or &quot; &amp; $archiveRoot &amp; &quot;Client Files - Western. BaseElements error &quot; &amp; BE_GetLastError ; JSONString ] )</Chunk></DisplayCalculation></Step>
+<Step enable="True" id="70" name="End If"><StepText>End If</StepText><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#Every client folder on K:. Western = Client Files - Western\&lt;Letter&gt;\&lt;Last, First&gt;. Eastern = Client Files - Eastern\&lt;Last, First&gt;. Central = Client Files - Central\&lt;Client ID&gt;. Paths are relative, so the same text works under K: and Archive.</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Every client folder on K:. Western = Client Files - Western\&lt;Letter&gt;\&lt;Last, First&gt;. Eastern = Client Files - Eastern\&lt;Last, First&gt;. Central = Client Files - Central\&lt;Client ID&gt;. Paths are relative, so the same text works under K: and Archive.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $candidates; Value:List ( Let ( [
+  ~region = &quot;Client Files - Western&quot; ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~letter = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~letter = If ( PatternCount ( ~letter ; Char ( 92 ) ) ; Right ( ~letter ; Length ( ~letter ) - Position ( ~letter ; Char ( 92 ) ; Length ( ~letter ) ; -1 ) ) ; ~letter ) ;
+    ~K = If ( IsEmpty ( ~letter ) ; &quot;&quot; ; Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region &amp; Char ( 92 ) &amp; ~letter ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ) ;
+    ~out = List ( ~out ; While ( [ ~j = 0 ; ~o = &quot;&quot; ] ; ~j &lt; ValueCount ( ~K ) ; [
+        ~j = ~j + 1 ;
+        ~kid = Let ( x = GetValue ( ~K ; ~j ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+        ~o = If ( IsEmpty ( ~kid ) ; ~o ; List ( ~o ; ~region &amp; Char ( 92 ) &amp; ~letter &amp; Char ( 92 ) &amp; ~kid ) )
+      ] ; ~o ) )
+  ] ; ~out )
+) ;
+Let ( [
+  ~region = &quot;Client Files - Eastern&quot; ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~kid = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+    ~out = If ( IsEmpty ( ~kid ) ; ~out ; List ( ~out ; ~region &amp; Char ( 92 ) &amp; ~kid ) )
+  ] ; ~out )
+) ;
+Let ( [
+  ~region = &quot;Client Files - Central&quot; ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~kid = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+    ~out = If ( IsEmpty ( ~kid ) ; ~out ; List ( ~out ; ~region &amp; Char ( 92 ) &amp; ~kid ) )
+  ] ; ~out )
+) ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[List ( Let ( [
+  ~region = "Client Files - Western" ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot & ~region ; 2 ) ; [ Char ( 13 ) & Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = "" ] ; ~i < ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~letter = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~letter = If ( PatternCount ( ~letter ; Char ( 92 ) ) ; Right ( ~letter ; Length ( ~letter ) - Position ( ~letter ; Char ( 92 ) ; Length ( ~letter ) ; -1 ) ) ; ~letter ) ;
+    ~K = If ( IsEmpty ( ~letter ) ; "" ; Substitute ( BE_FileListFolder ( $liveRoot & ~region & Char ( 92 ) & ~letter ; 2 ) ; [ Char ( 13 ) & Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ) ;
+    ~out = List ( ~out ; While ( [ ~j = 0 ; ~o = "" ] ; ~j < ValueCount ( ~K ) ; [
+        ~j = ~j + 1 ;
+        ~kid = Let ( x = GetValue ( ~K ; ~j ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+        ~o = If ( IsEmpty ( ~kid ) ; ~o ; List ( ~o ; ~region & Char ( 92 ) & ~letter & Char ( 92 ) & ~kid ) )
+      ] ; ~o ) )
+  ] ; ~out )
+) ;
+Let ( [
+  ~region = "Client Files - Eastern" ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot & ~region ; 2 ) ; [ Char ( 13 ) & Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = "" ] ; ~i < ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~kid = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+    ~out = If ( IsEmpty ( ~kid ) ; ~out ; List ( ~out ; ~region & Char ( 92 ) & ~kid ) )
+  ] ; ~out )
+) ;
+Let ( [
+  ~region = "Client Files - Central" ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot & ~region ; 2 ) ; [ Char ( 13 ) & Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = "" ] ; ~i < ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~kid = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+    ~out = If ( IsEmpty ( ~kid ) ; ~out ; List ( ~out ; ~region & Char ( 92 ) & ~kid ) )
+  ] ; ~out )
+) )]]></Calculation><DisplayCalculation><Chunk type="NoRef">List ( Let ( [
+  ~region = &quot;Client Files - Western&quot; ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~letter = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~letter = If ( PatternCount ( ~letter ; Char ( 92 ) ) ; Right ( ~letter ; Length ( ~letter ) - Position ( ~letter ; Char ( 92 ) ; Length ( ~letter ) ; -1 ) ) ; ~letter ) ;
+    ~K = If ( IsEmpty ( ~letter ) ; &quot;&quot; ; Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region &amp; Char ( 92 ) &amp; ~letter ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ) ;
+    ~out = List ( ~out ; While ( [ ~j = 0 ; ~o = &quot;&quot; ] ; ~j &lt; ValueCount ( ~K ) ; [
+        ~j = ~j + 1 ;
+        ~kid = Let ( x = GetValue ( ~K ; ~j ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+        ~o = If ( IsEmpty ( ~kid ) ; ~o ; List ( ~o ; ~region &amp; Char ( 92 ) &amp; ~letter &amp; Char ( 92 ) &amp; ~kid ) )
+      ] ; ~o ) )
+  ] ; ~out )
+) ;
+Let ( [
+  ~region = &quot;Client Files - Eastern&quot; ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~kid = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+    ~out = If ( IsEmpty ( ~kid ) ; ~out ; List ( ~out ; ~region &amp; Char ( 92 ) &amp; ~kid ) )
+  ] ; ~out )
+) ;
+Let ( [
+  ~region = &quot;Client Files - Central&quot; ;
+  ~L = Substitute ( BE_FileListFolder ( $liveRoot &amp; ~region ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )
+] ;
+While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( ~L ) ; [
+    ~i = ~i + 1 ;
+    ~kid = Let ( x = GetValue ( ~L ; ~i ) ; If ( Right ( x ; 1 ) = Char ( 92 ) ; Left ( x ; Length ( x ) - 1 ) ; x ) ) ;
+    ~kid = If ( PatternCount ( ~kid ; Char ( 92 ) ) ; Right ( ~kid ; Length ( ~kid ) - Position ( ~kid ; Char ( 92 ) ; Length ( ~kid ) ; -1 ) ) ; ~kid ) ;
+    ~out = If ( IsEmpty ( ~kid ) ; ~out ; List ( ~out ; ~region &amp; Char ( 92 ) &amp; ~kid ) )
+  ] ; ~out )
+) )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$candidates</Name></Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#Keep the ones that also exist in Archive, with how many files the K: copy holds.</StepText><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Keep the ones that also exist in Archive, with how many files the K: copy holds.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $dups; Value:While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( $candidates ) ; [
+    ~i = ~i + 1 ;
+    ~rel = GetValue ( $candidates ; ~i ) ;
+    ~notes = If ( Left ( ~rel ; 22 ) = &quot;Client Files - Central&quot; ; $liveRoot &amp; ~rel ; $liveRoot &amp; ~rel &amp; Char ( 92 ) &amp; &quot;Session Notes&quot; ) ;
+    ~count = If ( IsEmpty ( ~rel ) or not BE_FileExists ( $archiveRoot &amp; ~rel ) ; -1 ; ValueCount ( Substitute ( BE_FileListFolder ( ~notes ; 1 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ) ) ;
+    ~out = If ( ~count &lt; 0 ; ~out ; List ( ~out ; ~rel &amp; &quot;   (&quot; &amp; ~count &amp; &quot; file&quot; &amp; If ( ~count = 1 ; &quot;&quot; ; &quot;s&quot; ) &amp; &quot; in the K: &quot; &amp; If ( Left ( ~rel ; 22 ) = &quot;Client Files - Central&quot; ; &quot;folder&quot; ; &quot;Session Notes folder&quot; ) &amp; &quot;)&quot; ) )
+  ] ; ~out ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[While ( [ ~i = 0 ; ~out = "" ] ; ~i < ValueCount ( $candidates ) ; [
+    ~i = ~i + 1 ;
+    ~rel = GetValue ( $candidates ; ~i ) ;
+    ~notes = If ( Left ( ~rel ; 22 ) = "Client Files - Central" ; $liveRoot & ~rel ; $liveRoot & ~rel & Char ( 92 ) & "Session Notes" ) ;
+    ~count = If ( IsEmpty ( ~rel ) or not BE_FileExists ( $archiveRoot & ~rel ) ; -1 ; ValueCount ( Substitute ( BE_FileListFolder ( ~notes ; 1 ) ; [ Char ( 13 ) & Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ) ) ;
+    ~out = If ( ~count < 0 ; ~out ; List ( ~out ; ~rel & "   (" & ~count & " file" & If ( ~count = 1 ; "" ; "s" ) & " in the K: " & If ( Left ( ~rel ; 22 ) = "Client Files - Central" ; "folder" ; "Session Notes folder" ) & ")" ) )
+  ] ; ~out )]]></Calculation><DisplayCalculation><Chunk type="NoRef">While ( [ ~i = 0 ; ~out = &quot;&quot; ] ; ~i &lt; ValueCount ( $candidates ) ; [
+    ~i = ~i + 1 ;
+    ~rel = GetValue ( $candidates ; ~i ) ;
+    ~notes = If ( Left ( ~rel ; 22 ) = &quot;Client Files - Central&quot; ; $liveRoot &amp; ~rel ; $liveRoot &amp; ~rel &amp; Char ( 92 ) &amp; &quot;Session Notes&quot; ) ;
+    ~count = If ( IsEmpty ( ~rel ) or not BE_FileExists ( $archiveRoot &amp; ~rel ) ; -1 ; ValueCount ( Substitute ( BE_FileListFolder ( ~notes ; 1 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ) ) ;
+    ~out = If ( ~count &lt; 0 ; ~out ; List ( ~out ; ~rel &amp; &quot;   (&quot; &amp; ~count &amp; &quot; file&quot; &amp; If ( ~count = 1 ; &quot;&quot; ; &quot;s&quot; ) &amp; &quot; in the K: &quot; &amp; If ( Left ( ~rel ; 22 ) = &quot;Client Files - Central&quot; ; &quot;folder&quot; ; &quot;Session Notes folder&quot; ) &amp; &quot;)&quot; ) )
+  ] ; ~out )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$dups</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $dupCount; Value:ValueCount ( $dups ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[ValueCount ( $dups )]]></Calculation><DisplayCalculation><Chunk type="NoRef">ValueCount ( $dups )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$dupCount</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $report; Value:&quot;Client folders that exist on BOTH K: and A: (Archive)&quot; &amp; ¶ &amp;
+&quot;Run: &quot; &amp; Get ( CurrentTimestamp ) &amp; ¶ &amp;
+&quot;Checked &quot; &amp; ValueCount ( $candidates ) &amp; &quot; client folders on K:. Found &quot; &amp; $dupCount &amp; &quot; duplicate&quot; &amp; If ( $dupCount = 1 ; &quot;&quot; ; &quot;s&quot; ) &amp; &quot;.&quot; &amp; ¶ &amp;
+&quot;Each path below is the same on K: and A:. Move any notes from the K: copy into the A: copy, then delete the K: copy.&quot; &amp; ¶ &amp; ¶ &amp;
+If ( $dupCount = 0 ; &quot;(none)&quot; ; $dups ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA["Client folders that exist on BOTH K: and A: (Archive)" & ¶ &
+"Run: " & Get ( CurrentTimestamp ) & ¶ &
+"Checked " & ValueCount ( $candidates ) & " client folders on K:. Found " & $dupCount & " duplicate" & If ( $dupCount = 1 ; "" ; "s" ) & "." & ¶ &
+"Each path below is the same on K: and A:. Move any notes from the K: copy into the A: copy, then delete the K: copy." & ¶ & ¶ &
+If ( $dupCount = 0 ; "(none)" ; $dups )]]></Calculation><DisplayCalculation><Chunk type="NoRef">&quot;Client folders that exist on BOTH K: and A: (Archive)&quot; &amp; ¶ &amp;
+&quot;Run: &quot; &amp; Get ( CurrentTimestamp ) &amp; ¶ &amp;
+&quot;Checked &quot; &amp; ValueCount ( $candidates ) &amp; &quot; client folders on K:. Found &quot; &amp; $dupCount &amp; &quot; duplicate&quot; &amp; If ( $dupCount = 1 ; &quot;&quot; ; &quot;s&quot; ) &amp; &quot;.&quot; &amp; ¶ &amp;
+&quot;Each path below is the same on K: and A:. Move any notes from the K: copy into the A: copy, then delete the K: copy.&quot; &amp; ¶ &amp; ¶ &amp;
+If ( $dupCount = 0 ; &quot;(none)&quot; ; $dups )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$report</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $reportFile; Value:$liveRoot &amp; &quot;Duplicate Client Folders &quot; &amp; Let ( t = Get ( CurrentTimestamp ) ; Year ( t ) &amp; Right ( &quot;0&quot; &amp; Month ( t ) ; 2 ) &amp; Right ( &quot;0&quot; &amp; Day ( t ) ; 2 ) &amp; &quot;-&quot; &amp; Right ( &quot;0&quot; &amp; Hour ( t ) ; 2 ) &amp; Right ( &quot;0&quot; &amp; Minute ( t ) ; 2 ) ) &amp; &quot;.txt&quot; ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[$liveRoot & "Duplicate Client Folders " & Let ( t = Get ( CurrentTimestamp ) ; Year ( t ) & Right ( "0" & Month ( t ) ; 2 ) & Right ( "0" & Day ( t ) ; 2 ) & "-" & Right ( "0" & Hour ( t ) ; 2 ) & Right ( "0" & Minute ( t ) ; 2 ) ) & ".txt"]]></Calculation><DisplayCalculation><Chunk type="NoRef">$liveRoot &amp; &quot;Duplicate Client Folders &quot; &amp; Let ( t = Get ( CurrentTimestamp ) ; Year ( t ) &amp; Right ( &quot;0&quot; &amp; Month ( t ) ; 2 ) &amp; Right ( &quot;0&quot; &amp; Day ( t ) ; 2 ) &amp; &quot;-&quot; &amp; Right ( &quot;0&quot; &amp; Hour ( t ) ; 2 ) &amp; Right ( &quot;0&quot; &amp; Minute ( t ) ; 2 ) ) &amp; &quot;.txt&quot;</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$reportFile</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $write; Value:BE_FileWriteText ( $reportFile ; Substitute ( $report ; ¶ ; Char ( 13 ) &amp; Char ( 10 ) ) ) ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[BE_FileWriteText ( $reportFile ; Substitute ( $report ; ¶ ; Char ( 13 ) & Char ( 10 ) ) )]]></Calculation><DisplayCalculation><Chunk type="NoRef">BE_FileWriteText ( $reportFile ; Substitute ( $report ; ¶ ; Char ( 13 ) &amp; Char ( 10 ) ) )</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$write</Name></Step>
+<Step enable="True" id="141" name="Set Variable"><StepText>Set Variable [ $writeError; Value:BE_GetLastError ]</StepText><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[BE_GetLastError]]></Calculation><DisplayCalculation><Chunk type="NoRef">BE_GetLastError</Chunk></DisplayCalculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation><DisplayCalculation><Chunk type="NoRef">1</Chunk></DisplayCalculation></Repetition><Name>$writeError</Name></Step>
+<Step enable="True" id="103" name="Exit Script"><StepText>Exit Script [ Result: JSONSetElement ( &quot;{}&quot; ; [ &quot;ok&quot; ; 1 ; JSONBoolean ] ; [ &quot;checked&quot; ; ValueCount ( $candidates ) ; JSONNumber ] ; [ &quot;duplicates&quot; ; $dupCount ; JSONNumber ] ; [ &quot;reportFile&quot; ; $reportFile ; JSONString ] ; [ &quot;writeError&quot; ; $writeError ; JSONNumber ] ; [ &quot;report&quot; ; $report ; JSONString ] ) ]</StepText><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "{}" ; [ "ok" ; 1 ; JSONBoolean ] ; [ "checked" ; ValueCount ( $candidates ) ; JSONNumber ] ; [ "duplicates" ; $dupCount ; JSONNumber ] ; [ "reportFile" ; $reportFile ; JSONString ] ; [ "writeError" ; $writeError ; JSONNumber ] ; [ "report" ; $report ; JSONString ] )]]></Calculation><DisplayCalculation><Chunk type="NoRef">JSONSetElement ( &quot;{}&quot; ; [ &quot;ok&quot; ; 1 ; JSONBoolean ] ; [ &quot;checked&quot; ; ValueCount ( $candidates ) ; JSONNumber ] ; [ &quot;duplicates&quot; ; $dupCount ; JSONNumber ] ; [ &quot;reportFile&quot; ; $reportFile ; JSONString ] ; [ &quot;writeError&quot; ; $writeError ; JSONNumber ] ; [ &quot;report&quot; ; $report ; JSONString ] )</Chunk></DisplayCalculation></Step>
+</fmxmlsnippet>

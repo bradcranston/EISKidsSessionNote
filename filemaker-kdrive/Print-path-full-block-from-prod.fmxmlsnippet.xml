@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="68" name="If">
+				<StepText>If [ SessionNote::county = &quot;Allegheny&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Allegheny"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Allegheny&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#Allegheny print copies go in the current week&apos;s folder (Sun-Sat, named YYYYMMDD-YYYYMMDD - ...), or Late when the session date is outside the current week. 9/29/26 bc, hardened 9/30/26</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>Allegheny print copies go in the current week&apos;s folder (Sun-Sat, named YYYYMMDD-YYYYMMDD - ...), or Late when the session date is outside the current week. 9/29/26 bc, hardened 9/30/26</Text>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $printBase; Value:&quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; Char ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; Char ( 92 ) &amp; &quot;County Prep Folder&quot; &amp; Char ( 92 ) &amp; &quot;Ready for Printing- from DocuSign&quot; &amp; Char ( 92 ) &amp; &quot;Allegheny&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA["K:" & Char ( 92 ) & "Early Intervention Specialists" & Char ( 92 ) & "EIS - Documents" & Char ( 92 ) & "County Prep Folder" & Char ( 92 ) & "Ready for Printing- from DocuSign" & Char ( 92 ) & "Allegheny"]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">&quot;K:&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;County Prep Folder&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;Ready for Printing- from DocuSign&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;Allegheny&quot;</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$printBase</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $sessionDay; Value:Let ( ~p = Substitute ( SessionNote::sessionDate ; &quot;-&quot; ; ¶ ) ; Date ( GetValue ( ~p ; 2 ) ; GetValue ( ~p ; 3 ) ; GetValue ( ~p ; 1 ) ) ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[Let ( ~p = Substitute ( SessionNote::sessionDate ; "-" ; ¶ ) ; Date ( GetValue ( ~p ; 2 ) ; GetValue ( ~p ; 3 ) ; GetValue ( ~p ; 1 ) ) )]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">Let</Chunk>
+						<Chunk type="NoRef"> ( ~p = </Chunk>
+						<Chunk type="FunctionRef">Substitute</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FieldRef">
+							<Field table="SessionNote" id="14" name="sessionDate"/>
+						</Chunk>
+						<Chunk type="NoRef"> ; &quot;-&quot; ; ¶ ) ; </Chunk>
+						<Chunk type="FunctionRef">Date</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">GetValue</Chunk>
+						<Chunk type="NoRef"> ( ~p ; 2 ) ; </Chunk>
+						<Chunk type="FunctionRef">GetValue</Chunk>
+						<Chunk type="NoRef"> ( ~p ; 3 ) ; </Chunk>
+						<Chunk type="FunctionRef">GetValue</Chunk>
+						<Chunk type="NoRef"> ( ~p ; 1 ) ) )</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$sessionDay</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $weekStart; Value:Let ( ~t = Get ( CurrentDate ) ; ~t - DayOfWeek ( ~t ) + 1 ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[Let ( ~t = Get ( CurrentDate ) ; ~t - DayOfWeek ( ~t ) + 1 )]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">Let</Chunk>
+						<Chunk type="NoRef"> ( ~t = </Chunk>
+						<Chunk type="FunctionRef">Get</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">CurrentDate</Chunk>
+						<Chunk type="NoRef"> ) ; ~t - </Chunk>
+						<Chunk type="FunctionRef">DayOfWeek</Chunk>
+						<Chunk type="NoRef"> ( ~t ) + 1 )</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$weekStart</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $weekPrefix; Value:Let ( [ ~s = $weekStart ; ~e = $weekStart + 6 ] ; Year ( ~s ) &amp; Right ( &quot;0&quot; &amp; Month ( ~s ) ; 2 ) &amp; Right ( &quot;0&quot; &amp; Day ( ~s ) ; 2 ) &amp; &quot;-&quot; &amp; Year ( ~e ) &amp; Right ( &quot;0&quot; &amp; Month ( ~e ) ; 2 ) &amp; Right ( &quot;0&quot; &amp; Day ( ~e ) ; 2 ) ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[Let ( [ ~s = $weekStart ; ~e = $weekStart + 6 ] ; Year ( ~s ) & Right ( "0" & Month ( ~s ) ; 2 ) & Right ( "0" & Day ( ~s ) ; 2 ) & "-" & Year ( ~e ) & Right ( "0" & Month ( ~e ) ; 2 ) & Right ( "0" & Day ( ~e ) ; 2 ) )]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">Let</Chunk>
+						<Chunk type="NoRef"> ( [ ~s = $weekStart ; ~e = $weekStart + 6 ] ; </Chunk>
+						<Chunk type="FunctionRef">Year</Chunk>
+						<Chunk type="NoRef"> ( ~s ) &amp; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( &quot;0&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Month</Chunk>
+						<Chunk type="NoRef"> ( ~s ) ; 2 ) &amp; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( &quot;0&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Day</Chunk>
+						<Chunk type="NoRef"> ( ~s ) ; 2 ) &amp; &quot;-&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Year</Chunk>
+						<Chunk type="NoRef"> ( ~e ) &amp; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( &quot;0&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Month</Chunk>
+						<Chunk type="NoRef"> ( ~e ) ; 2 ) &amp; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( &quot;0&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Day</Chunk>
+						<Chunk type="NoRef"> ( ~e ) ; 2 ) )</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$weekPrefix</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $weekFolder; Value:&quot;&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[""]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">&quot;&quot;</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$weekFolder</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $folderList; Value:&quot;&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[""]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">&quot;&quot;</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$folderList</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $beListError; Value:&quot;&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[""]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">&quot;&quot;</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$beListError</Name>
+			</Step>
+<Step enable="True" id="68" name="If">
+				<StepText>If [ not IsEmpty ( $sessionDay ) and $sessionDay ≥ $weekStart and $sessionDay ≤ $weekStart + 6 ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[not IsEmpty ( $sessionDay ) and $sessionDay ≥ $weekStart and $sessionDay ≤ $weekStart + 6]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FunctionRef">not</Chunk>
+					<Chunk type="NoRef"> </Chunk>
+					<Chunk type="FunctionRef">IsEmpty</Chunk>
+					<Chunk type="NoRef"> ( $sessionDay ) </Chunk>
+					<Chunk type="FunctionRef">and</Chunk>
+					<Chunk type="NoRef"> $sessionDay ≥ $weekStart </Chunk>
+					<Chunk type="FunctionRef">and</Chunk>
+					<Chunk type="NoRef"> $sessionDay ≤ $weekStart + 6</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#1) List the Allegheny folder. Normalise Windows line breaks so GetValue sees one entry per line.</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>1) List the Allegheny folder. Normalise Windows line breaks so GetValue sees one entry per line.</Text>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $folderList; Value:Substitute ( BE_FileListFolder ( $printBase ; 2 ) ; [ Char ( 13 ) &amp; Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[Substitute ( BE_FileListFolder ( $printBase ; 2 ) ; [ Char ( 13 ) & Char ( 10 ) ; ¶ ] ; [ Char ( 10 ) ; ¶ ] )]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">Substitute</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">BE_FileListFolder</Chunk>
+						<Chunk type="NoRef"> ( $printBase ; 2 ) ; [ </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 13 ) &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 10 ) ; ¶ ] ; [ </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 10 ) ; ¶ ] )</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$folderList</Name>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $beListError; Value:BE_GetLastError ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[BE_GetLastError]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">BE_GetLastError</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$beListError</Name>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#2) Match by the date prefix. Entries may come back as bare names or full paths - keep only the last path segment.</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>2) Match by the date prefix. Entries may come back as bare names or full paths - keep only the last path segment.</Text>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $weekFolder; Value:While ( [ ~l = $folderList ; ~n = ValueCount ( ~l ) ; ~i = 0 ; ~r = &quot;&quot; ] ; ~i &lt; ~n and IsEmpty ( ~r ) ; [ ~i = ~i + 1 ; ~v = Trim ( GetValue ( ~l ; ~i ) ) ; ~v = If ( Right ( ~v ; 1 ) = Char ( 92 ) ; Left ( ~v ; Length ( ~v ) - 1 ) ; ~v ) ; ~v = If ( PatternCount ( ~v ; Char ( 92 ) ) ; Right ( ~v ; Length ( ~v ) - Position ( ~v ; Char ( 92 ) ; Length ( ~v ) ; -1 ) ) ; ~v ) ; ~r = If ( Left ( ~v ; Length ( $weekPrefix ) ) = $weekPrefix ; ~v ; &quot;&quot; ) ] ; ~r ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[While ( [ ~l = $folderList ; ~n = ValueCount ( ~l ) ; ~i = 0 ; ~r = "" ] ; ~i < ~n and IsEmpty ( ~r ) ; [ ~i = ~i + 1 ; ~v = Trim ( GetValue ( ~l ; ~i ) ) ; ~v = If ( Right ( ~v ; 1 ) = Char ( 92 ) ; Left ( ~v ; Length ( ~v ) - 1 ) ; ~v ) ; ~v = If ( PatternCount ( ~v ; Char ( 92 ) ) ; Right ( ~v ; Length ( ~v ) - Position ( ~v ; Char ( 92 ) ; Length ( ~v ) ; -1 ) ) ; ~v ) ; ~r = If ( Left ( ~v ; Length ( $weekPrefix ) ) = $weekPrefix ; ~v ; "" ) ] ; ~r )]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">While</Chunk>
+						<Chunk type="NoRef"> ( [ ~l = $folderList ; ~n = </Chunk>
+						<Chunk type="FunctionRef">ValueCount</Chunk>
+						<Chunk type="NoRef"> ( ~l ) ; ~i = 0 ; ~r = &quot;&quot; ] ; ~i &lt; ~n </Chunk>
+						<Chunk type="FunctionRef">and</Chunk>
+						<Chunk type="NoRef"> </Chunk>
+						<Chunk type="FunctionRef">IsEmpty</Chunk>
+						<Chunk type="NoRef"> ( ~r ) ; [ ~i = ~i + 1 ; ~v = </Chunk>
+						<Chunk type="FunctionRef">Trim</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">GetValue</Chunk>
+						<Chunk type="NoRef"> ( ~l ; ~i ) ) ; ~v = </Chunk>
+						<Chunk type="FunctionRef">If</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( ~v ; 1 ) = </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) ; </Chunk>
+						<Chunk type="FunctionRef">Left</Chunk>
+						<Chunk type="NoRef"> ( ~v ; </Chunk>
+						<Chunk type="FunctionRef">Length</Chunk>
+						<Chunk type="NoRef"> ( ~v ) - 1 ) ; ~v ) ; ~v = </Chunk>
+						<Chunk type="FunctionRef">If</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">PatternCount</Chunk>
+						<Chunk type="NoRef"> ( ~v ; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) ) ; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( ~v ; </Chunk>
+						<Chunk type="FunctionRef">Length</Chunk>
+						<Chunk type="NoRef"> ( ~v ) - </Chunk>
+						<Chunk type="FunctionRef">Position</Chunk>
+						<Chunk type="NoRef"> ( ~v ; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) ; </Chunk>
+						<Chunk type="FunctionRef">Length</Chunk>
+						<Chunk type="NoRef"> ( ~v ) ; -1 ) ) ; ~v ) ; ~r = </Chunk>
+						<Chunk type="FunctionRef">If</Chunk>
+						<Chunk type="NoRef"> ( </Chunk>
+						<Chunk type="FunctionRef">Left</Chunk>
+						<Chunk type="NoRef"> ( ~v ; </Chunk>
+						<Chunk type="FunctionRef">Length</Chunk>
+						<Chunk type="NoRef"> ( $weekPrefix ) ) = $weekPrefix ; ~v ; &quot;&quot; ) ] ; ~r )</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$weekFolder</Name>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#3) Fallback: the folders follow the pattern &quot;&lt;week&gt; - Mary print on MM.DD&quot; (the Monday after the week). Use it if it exists.</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>3) Fallback: the folders follow the pattern &quot;&lt;week&gt; - Mary print on MM.DD&quot; (the Monday after the week). Use it if it exists.</Text>
+			</Step>
+<Step enable="True" id="68" name="If">
+				<StepText>If [ IsEmpty ( $weekFolder ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[IsEmpty ( $weekFolder )]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FunctionRef">IsEmpty</Chunk>
+					<Chunk type="NoRef"> ( $weekFolder )</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $guess; Value:Let ( ~m = $weekStart + 8 ; $weekPrefix &amp; &quot; - Mary print on &quot; &amp; Right ( &quot;0&quot; &amp; Month ( ~m ) ; 2 ) &amp; &quot;.&quot; &amp; Right ( &quot;0&quot; &amp; Day ( ~m ) ; 2 ) ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[Let ( ~m = $weekStart + 8 ; $weekPrefix & " - Mary print on " & Right ( "0" & Month ( ~m ) ; 2 ) & "." & Right ( "0" & Day ( ~m ) ; 2 ) )]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="FunctionRef">Let</Chunk>
+						<Chunk type="NoRef"> ( ~m = $weekStart + 8 ; $weekPrefix &amp; &quot; - Mary print on &quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( &quot;0&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Month</Chunk>
+						<Chunk type="NoRef"> ( ~m ) ; 2 ) &amp; &quot;.&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Right</Chunk>
+						<Chunk type="NoRef"> ( &quot;0&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Day</Chunk>
+						<Chunk type="NoRef"> ( ~m ) ; 2 ) )</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$guess</Name>
+			</Step>
+<Step enable="True" id="68" name="If">
+				<StepText>If [ BE_FileExists ( $printBase &amp; Char ( 92 ) &amp; $guess ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[BE_FileExists ( $printBase & Char ( 92 ) & $guess )]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FunctionRef">BE_FileExists</Chunk>
+					<Chunk type="NoRef"> ( $printBase &amp; </Chunk>
+					<Chunk type="FunctionRef">Char</Chunk>
+					<Chunk type="NoRef"> ( 92 ) &amp; $guess )</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $weekFolder; Value:$guess ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[$guess]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">$guess</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$weekFolder</Name>
+			</Step>
+<Step enable="True" id="70" name="End If">
+				<StepText>End If</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="70" name="End If">
+				<StepText>End If</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="68" name="If">
+				<StepText>If [ IsEmpty ( $weekFolder ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[IsEmpty ( $weekFolder )]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FunctionRef">IsEmpty</Chunk>
+					<Chunk type="NoRef"> ( $weekFolder )</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#No folder for this week - leave the PDF loose in the Allegheny folder so it is still findable.</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>No folder for this week - leave the PDF loose in the Allegheny folder so it is still findable.</Text>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $filePath; Value:$printBase ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[$printBase]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">$printBase</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$filePath</Name>
+			</Step>
+<Step enable="True" id="69" name="Else">
+				<StepText>Else [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $filePath; Value:$printBase &amp; Char ( 92 ) &amp; $weekFolder ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[$printBase & Char ( 92 ) & $weekFolder]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">$printBase &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; $weekFolder</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$filePath</Name>
+			</Step>
+<Step enable="True" id="70" name="End If">
+				<StepText>End If</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="69" name="Else">
+				<StepText>Else [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $filePath; Value:$printBase &amp; Char ( 92 ) &amp; &quot;Late&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA[$printBase & Char ( 92 ) & "Late"]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">$printBase &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;Late&quot;</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$filePath</Name>
+			</Step>
+<Step enable="True" id="70" name="End If">
+				<StepText>End If</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#END Allegheny weekly print routing</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>END Allegheny weekly print routing</Text>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;Butler&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Butler"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Butler&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="68" name="If">
+				<StepText>If [ PatternCount ( SessionNote::sessionStatus ; &quot;Held&quot; ) ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[PatternCount ( SessionNote::sessionStatus ; "Held" )]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FunctionRef">PatternCount</Chunk>
+					<Chunk type="NoRef"> ( </Chunk>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="58" name="sessionStatus"/>
+					</Chunk>
+					<Chunk type="NoRef"> ; &quot;Held&quot; )</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="141" name="Set Variable">
+				<StepText>Set Variable [ $filePath; Value:&quot;K:&quot; &amp; Char ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; Char ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; Char ( 92 ) &amp; &quot;County Prep Folder&quot;
+&amp; Char ( 92 )
+&amp; &quot;Ready for Printing- from DocuSign&quot;
+&amp; Char ( 92 )
+&amp; &quot;Butler (101)&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Value>
+					<Calculation><![CDATA["K:" & Char ( 92 ) & "Early Intervention Specialists" & Char ( 92 ) & "EIS - Documents" & Char ( 92 ) & "County Prep Folder"
+& Char ( 92 )
+& "Ready for Printing- from DocuSign"
+& Char ( 92 )
+& "Butler (101)"]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">&quot;K:&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;Early Intervention Specialists&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;EIS - Documents&quot; &amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 ) &amp; &quot;County Prep Folder&quot;
+&amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 )
+&amp; &quot;Ready for Printing- from DocuSign&quot;
+&amp; </Chunk>
+						<Chunk type="FunctionRef">Char</Chunk>
+						<Chunk type="NoRef"> ( 92 )
+&amp; &quot;Butler (101)&quot;</Chunk>
+					</DisplayCalculation>
+				</Value>
+				<Repetition>
+					<Calculation><![CDATA[1]]></Calculation>
+					<DisplayCalculation>
+						<Chunk type="NoRef">1</Chunk>
+					</DisplayCalculation>
+				</Repetition>
+				<Name>$filePath</Name>
+			</Step>
+<Step enable="True" id="69" name="Else">
+				<StepText>Else [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="70" name="End If">
+				<StepText>End If</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;Chester&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Chester"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Chester&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;Cumberland/Perry&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Cumberland/Perry"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Cumberland/Perry&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;Delaware&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Delaware"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Delaware&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;Lancaster&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Lancaster"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Lancaster&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;Washington&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "Washington"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;Washington&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="125" name="Else If">
+				<StepText>Else If [ SessionNote::county = &quot;York/Adams&quot; ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Calculation><![CDATA[SessionNote::county = "York/Adams"]]></Calculation>
+				<DisplayCalculation>
+					<Chunk type="FieldRef">
+						<Field table="SessionNote" id="9" name="county"/>
+					</Chunk>
+					<Chunk type="NoRef"> = &quot;York/Adams&quot;</Chunk>
+				</DisplayCalculation>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="69" name="Else">
+				<StepText>Else [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+			</Step>
+<Step enable="True" id="89" name="# (comment)">
+				<StepText>#Any other county (Chester, Cumberland/Perry, Dauphin, Delaware, Franklin/Fulton, Lancaster, Washington, York/Adams, or a new one) gets no print copy. Without this, unlisted counties fell through and re-exported to the client-file path. 10/1/26 bc</StepText>
+				<DisableStepCollapsed state="False"/>
+				<Restore state="False"/>
+				<Text>Any other county (Chester, Cumberland/Perry, Dauphin, Delaware, Franklin/Fulton, Lancaster, Washington, York/Adams, or a new one) gets no print copy. Without this, unlisted counties fell through and re-exported to the client-file path. 10/1/26 bc</Text>
+			</Step>
+<Step enable="True" id="103" name="Exit Script">
+				<StepText>Exit Script [  ]</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="70" name="End If">
+				<StepText>End If</StepText>
+				<DisableStepCollapsed state="False"/>
+			</Step>
+<Step enable="True" id="89" name="# (comment)"><StepText>#END print file path (synced from production 10/1/26)</StepText><Text>END print file path (synced from production 10/1/26)</Text></Step>
+</fmxmlsnippet>

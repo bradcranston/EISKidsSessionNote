@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Void added 9/16/26: a voided original never goes out again, even if it was voided before its first export.</Text></Step>
+<Step enable="True" id="28" name="Perform Find"><DisableStepCollapsed state="False"/><Restore state="True"/><Query><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="88" name="exported"/><Text>1</Text></Criteria></RequestRow><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>draft</Text></Criteria></RequestRow><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>invalid</Text></Criteria></RequestRow><RequestRow operation="Exclude"><Criteria><Field table="SessionNote" id="87" name="status"/><Text>Void</Text></Criteria></RequestRow></Query></Step>
+</fmxmlsnippet>

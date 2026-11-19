@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>10/1/26: run the queue in its own server session (no wait). Running it inline tied every PDF rebuild and send to MirrorSync's Data API session - when that session ended mid-send the note was left on Sending (9/24 and 10/1 notes). If PSoS is refused here, fall back to running it inline.</Text></Step>
+<Step enable="True" id="164" name="Perform Script on Server"><DisableStepCollapsed state="False"/><WaitForCompletion state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["limit";25;JSONNumber] )]]></Calculation><Script id="178" name="Server - Process Session Note Email Queue"/></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[Get ( LastError ) ≠ 0]]></Calculation></Step>
+<Step enable="True" id="1" name="Perform Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["limit";25;JSONNumber] )]]></Calculation><Script id="178" name="Server - Process Session Note Email Queue"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+</fmxmlsnippet>

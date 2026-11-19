@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>9/16/26: the widget needs to know who is viewing, to offer the supervisor signature pad only to the assigned supervisor.</Text></Step>
+<Step enable="True" id="141" name="Set Variable"><DisableStepCollapsed state="False"/><Value><Calculation><![CDATA[JSONSetElement ( $data
+; ["online" ; Get ( HostName ) = "EIS FM Server" ; JSONBoolean]
+; ["currentUserId" ; ExecuteSQL ( "SELECT \"__ID\" FROM \"UserAccount\" WHERE \"username\" = ?" ; "" ; "" ; Get ( AccountName ) ) ; JSONString]
+; ["supervisorAssignedName" ; Let ( ~sup = JSONGetElement ( $data ; "supervisorUserId" ) ;
+     Trim ( ExecuteSQL ( "SELECT \"firstName\" FROM \"UserAccount\" WHERE \"__ID\" = ?" ; "" ; "" ; ~sup ) & " " & ExecuteSQL ( "SELECT \"lastName\" FROM \"UserAccount\" WHERE \"__ID\" = ?" ; "" ; "" ; ~sup ) ) ) ; JSONString]
+)]]></Calculation></Value><Repetition><Calculation><![CDATA[1]]></Calculation></Repetition><Name>$data</Name></Step>
+</fmxmlsnippet>

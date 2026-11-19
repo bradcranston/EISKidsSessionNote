@@ -26,18 +26,83 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-h1 {
+.page-header {
   background-color: #006690;
+  margin: -20px -20px 20px -20px;
+  border-radius: 8px 8px 0 0;
+}
+
+h1 {
   color: #fff;
   font-size: 22px;
   font-weight: 400;
   line-height: 1.2;
-  margin: -20px -20px 20px -20px;
-  padding: 15px 20px;
-  border-radius: 8px 8px 0 0;
+  padding: 15px 20px 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* Document actions toolbar — second row of the blue page header */
+.document-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 20px 14px 20px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 12px;
+}
+
+.doc-actions-online {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.doc-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-doc-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
+  transition: background-color 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.btn-doc-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.btn-doc-action:hover {
+  background-color: rgba(255,255,255,0.15);
+  border-color: #fff;
+}
+
+.btn-doc-action:active {
+  transform: scale(0.97);
+}
+
+.btn-doc-online[hidden] {
+  display: none;
+}
+
+/* Hide the whole actions row when neither online button is visible and only Close remains centered */
+.doc-actions-online:empty + .btn-doc-close {
+  margin-left: auto;
 }
 
 #headerStatus {
@@ -85,6 +150,182 @@ body.view-only #viewOnlyBanner {
   display: block;
 }
 
+/* ===== REVISIONS ===== */
+.btn-doc-action[hidden] {
+  display: none;
+}
+
+.revision-banner {
+  background-color: #fff8e1;
+  border: 1px solid #f0c36d;
+  border-radius: 5px;
+  color: #5c4400;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin: 0 0 16px 0;
+}
+
+.revision-banner[hidden] {
+  display: none;
+}
+
+.revision-banner--void {
+  background-color: #fdecea;
+  border-color: #e57373;
+  color: #8e1c1c;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ===== DRAFT RESTORE (11/5/26) ===== */
+.draft-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background-color: #e8f1fb;
+  border: 1px solid #7aa7d9;
+  border-radius: 5px;
+  color: #173a63;
+  font-size: 14px;
+  padding: 12px 14px;
+  margin: 0 0 16px 0;
+}
+
+.draft-banner[hidden] {
+  display: none;
+}
+
+.draft-banner-title {
+  font-weight: 700;
+}
+
+.draft-banner-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.draft-banner-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff;
+  color: #173a63;
+  border: 1px solid #7aa7d9;
+}
+
+.draft-banner-btn--primary {
+  background-color: #1f5f99;
+  border-color: #1f5f99;
+  color: #fff;
+}
+
+.draft-banner-btn:active {
+  transform: scale(0.97);
+}
+
+.revision-banner-title {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.revision-banner-reason:empty {
+  display: none;
+}
+
+.revision-changes {
+  margin-top: 6px;
+}
+
+.revision-changes summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.revision-changes ul {
+  margin: 6px 0 0 18px;
+}
+
+.revision-changes li {
+  margin: 2px 0;
+}
+
+.revision-changes-empty {
+  list-style: none;
+  font-style: italic;
+  margin-left: -18px;
+}
+
+.modal-box--wide {
+  max-width: 460px;
+  text-align: left;
+}
+
+.modal-box .modal-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.modal-box .modal-text {
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.modal-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+#reviseReason {
+  width: 100%;
+  font: inherit;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+/* The note behind the modal is view-only, which switches off every textarea -
+   this one has to stay usable. */
+body.view-only #reviseReason {
+  pointer-events: auto;
+  opacity: 1;
+  background-color: #fff !important;
+  color: #282828 !important;
+}
+
+/* Same for the modal's buttons - "body.view-only button" below disables
+   every button that is not in the header toolbar. */
+body.view-only #reviseNoteModal button {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.modal-overlay .modal-box--wide {
+  max-width: 460px;
+  text-align: left;
+}
+
+.modal-error {
+  color: #c62828;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.modal-error[hidden] {
+  display: none;
+}
+
+.modal-box--wide .modal-actions {
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
 body.view-only input,
 body.view-only textarea,
 body.view-only select,
@@ -101,7 +342,7 @@ body.view-only input[type="checkbox"] {
   opacity: 0.65;
 }
 
-body.view-only button,
+body.view-only button:not(.btn-doc-action),
 body.view-only .btn-clear-signature,
 body.view-only .pill-select__display,
 body.view-only .pill-select__pill-remove {
@@ -512,8 +753,97 @@ button:active {
   transform: translateX(-50%) translateY(0);
 }
 
+#copyLinkToast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background-color: #0d6efd;
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+#copyLinkToast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .btn-secondary {
   display: none;
+}
+
+/* Unsaved changes confirmation modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-overlay.visible {
+  display: flex;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 340px;
+  width: calc(100% - 40px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.modal-box p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #282828;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-modal-primary,
+.btn-modal-secondary {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-modal-primary {
+  background-color: #0091CE;
+  color: #fff;
+}
+
+.btn-modal-primary:hover {
+  background-color: #007AB8;
+}
+
+.btn-modal-secondary {
+  background-color: #e9ecef;
+  color: #282828;
+}
+
+.btn-modal-secondary:hover {
+  background-color: #dde1e4;
 }
 
 /* Signature Pad Styles */
@@ -564,6 +894,22 @@ button:active {
   font-weight: 600;
   color: #006690;
   pointer-events: none;
+}
+
+/* 11/9/26: a pad that already has a signature keeps the overlay (it lets the
+   page scroll from on top of the pad) but must not hide the signature. */
+.signature-activate-overlay--signed {
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 4px 8px;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.signature-activate-overlay--signed span {
+  font-size: 11px;
+  font-weight: 400;
+  color: #5b6b78;
 }
 
 /* Hide overlay in view-only mode — the saved signature should be visible */
@@ -671,4 +1017,225 @@ body.view-only .signature-activate-overlay {
     padding: 12px 15px;
     font-size: 18px;
   }
+}
+
+/* ===== Save Progress ===== */
+/* Shown for the duration of a real save. It blocks the form so a second tap
+   cannot start an overlapping save, and it is the only thing that reports
+   success - the toast now fires from the final FileMaker callback, not from
+   the moment the first script was dispatched. */
+#saveProgress {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.45);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+#saveProgress.visible {
+  display: flex;
+}
+
+.save-progress-box {
+  width: min(360px, calc(100vw - 48px));
+  padding: 24px 28px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.save-progress-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 14px;
+}
+
+.save-progress-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.save-progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0077aa 0%, #0095d9 100%);
+  transition: width 0.25s ease;
+}
+
+.save-progress-step {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.save-progress-dismiss {
+  display: none;
+  margin: 16px auto 0;
+  padding: 9px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #475569;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Failure state - the bar turns red, the step line carries the reason, and
+   the user gets a way out. The note stays dirty so Save can be retried. */
+#saveProgress.error .save-progress-fill {
+  background: linear-gradient(135deg, #be123c 0%, #e11d48 100%);
+  width: 100%;
+}
+
+#saveProgress.error .save-progress-label {
+  color: #be123c;
+}
+
+#saveProgress.error .save-progress-dismiss {
+  display: block;
+}
+
+/* ===== SIGNATURE GATES, LOCKING & SUPERVISOR (9/16/26) ===== */
+.signature-hint {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  margin: 0 0 6px 0;
+}
+
+/* A locking save is running - nothing on the form may change until it lands */
+body.locking #sessionNoteForm {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+#supervisorSection[hidden],
+#supSigSigned[hidden],
+#supSigWaiting[hidden],
+#supSigArea[hidden] {
+  display: none !important;
+}
+
+.supervisor-signed img {
+  display: block;
+  max-width: 100%;
+  max-height: 110px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 6px;
+}
+
+.supervisor-signed-by {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #334155;
+}
+
+.supervisor-waiting {
+  font-size: 14px;
+  color: #92400e;
+  background: #fff8e1;
+  border: 1px solid #f0c36d;
+  border-radius: 5px;
+  padding: 10px 14px;
+}
+
+.supervisor-sign-btn {
+  margin-top: 12px;
+}
+
+/* The supervisor signs a note that is already view-only: keep just this pad usable */
+body.view-only #supervisorSection .signature-activate-overlay {
+  display: flex;
+}
+
+body.view-only #supervisorSection canvas {
+  pointer-events: auto;
+  opacity: 1;
+  background-color: #fff !important;
+}
+
+body.view-only #supervisorSection button {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+body.view-only #supervisorSection button:disabled {
+  opacity: 0.6;
+}
+
+/* ===== CHECK & LOCK (9/17/26) ===== */
+.lock-check-list {
+  margin: 0 0 12px 20px;
+  font-size: 14px;
+  color: #7f1d1d;
+}
+
+.lock-check-list[hidden] {
+  display: none;
+}
+
+.lock-check-list li {
+  margin: 3px 0;
+}
+
+body.view-only #lockCheckModal button {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.btn-modal-primary[hidden] {
+  display: none;
+}
+
+/* ===== Family email status (9/23/26) ===== */
+.email-status-banner {
+  border: 1px solid #93c5fd;
+  background-color: #eff6ff;
+  color: #1e3a8a;
+  border-radius: 5px;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin: 0 0 16px 0;
+}
+
+.email-status-banner[hidden] {
+  display: none;
+}
+
+.email-status-banner--sent {
+  border-color: #86efac;
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.email-status-banner--failed {
+  border-color: #e57373;
+  background-color: #fdecea;
+  color: #8e1c1c;
+}
+
+.email-status-banner--none {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  color: #475569;
+}
+
+/* 11/10/26: caregiver finished-signing prompt holds its buttons for a moment */
+#caregiverDoneModal button:disabled {
+  opacity: 0.5;
+  cursor: default;
 }

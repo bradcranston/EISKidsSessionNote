@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>App version in the header. DatabaseVersion is a constant calc in each copy of the file, so an offline iPad reports its own copy's version - which is the point.</Text></Step>
+<Step enable="True" id="175" name="Perform JavaScript in Web Viewer"><DisableStepCollapsed state="False"/><ObjectName><Calculation><![CDATA["web"]]></Calculation></ObjectName><FunctionName><Calculation><![CDATA["setAppVersion"]]></Calculation></FunctionName><Parameters Count="1"><P><Calculation><![CDATA[ExecuteSQL ( "SELECT \"DatabaseVersion\" FROM \"MirrorSync\" FETCH FIRST 1 ROWS ONLY" ; "" ; "" )]]></Calculation></P></Parameters></Step>
+</fmxmlsnippet>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[$onServer]]></Calculation></Step>
+<Step enable="True" id="1" name="Perform Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[$param]]></Calculation><Script id="177" name="SessionNote: Email Sealed PDF (Server)"/></Step>
+<Step enable="True" id="125" name="Else If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[Get ( MultiUserState ) = 0]]></Calculation></Step>
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>10/23/26: offline copy (MirrorSync) - there is no server to hand the send to. Mark the note Waiting for Sync so the interventionist can see the email is pending; the email queue sends it on the first run after this note syncs. Left alone if the Email PDF button already marked it Sent.</Text></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[SessionNote::__ID = JSONGetElement ( $param ; "id" ) and IsEmpty ( SessionNote::emailStatus )]]></Calculation></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA["Waiting for Sync"]]></Calculation><Field table="SessionNote" id="120" name="emailStatus"/></Step>
+<Step enable="True" id="76" name="Set Field"><DisableStepCollapsed state="False"/><Calculation><![CDATA[Get ( CurrentTimestamp ) & " - sealed offline on " & Get ( AccountName ) & "'s device; the family email goes out after the next sync"]]></Calculation><Field table="SessionNote" id="123" name="emailResult"/></Step>
+<Step enable="True" id="75" name="Commit Records/Requests"><NoInteract state="True"/><Option state="False"/><ESSForceCommit state="False"/><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="175" name="Perform JavaScript in Web Viewer"><DisableStepCollapsed state="False"/><ObjectName><Calculation><![CDATA["web"]]></Calculation></ObjectName><FunctionName><Calculation><![CDATA["setEmailStatus"]]></Calculation></FunctionName><Parameters Count="1"><P><Calculation><![CDATA[JSONSetElement ( "{}" ; ["emailStatus";SessionNote::emailStatus;JSONString] ; ["emailSentTS";GetAsText ( SessionNote::emailSentTS );JSONString] ; ["emailSentTo";SessionNote::emailSentTo;JSONString] )]]></Calculation></P></Parameters></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+<Step enable="True" id="103" name="Exit Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["sent";False;JSONBoolean] ; ["reason";"offline - waiting for sync";JSONString] ; ["waitingForSync";True;JSONBoolean] ; ["id";JSONGetElement ( $param ; "id" );JSONString] )]]></Calculation></Step>
+<Step enable="True" id="69" name="Else"><DisableStepCollapsed state="False"/><Restore state="False"/></Step>
+<Step enable="True" id="164" name="Perform Script on Server"><DisableStepCollapsed state="False"/><WaitForCompletion state="False"/><Calculation><![CDATA[$param]]></Calculation><Script id="177" name="SessionNote: Email Sealed PDF (Server)"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+</fmxmlsnippet>

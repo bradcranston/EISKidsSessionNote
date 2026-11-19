@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Revision report for billing - revisions.xlsx in the same folder. Runs after this batch is marked exported so revisions in this batch count.</Text></Step>
+<Step enable="True" id="1" name="Perform Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["folder" ; Left ( $path ; Length ( $path ) - Length ( "sessionNotes.xlsx" ) ) ; JSONString] )]]></Calculation><Script id="0" name="Export: Revision Report"/></Step>
+</fmxmlsnippet>

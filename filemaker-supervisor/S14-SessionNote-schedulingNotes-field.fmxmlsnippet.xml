@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Field id="0" dataType="Text" fieldType="Normal" name="schedulingNotes"><Comment>Scheduling Notes. Required by the form when the next session date or time is blank (e.g. "Discharge"). Printed in the PDF box under Date/Time of Next Session.</Comment><AutoEnter allowEditing="True" constant="False" furigana="False" lookup="False" calculation="False"><ConstantData/></AutoEnter><Validation messageCalc="False" message="False" maxLength="False" valuelist="False" calculation="False" alwaysValidateCalculation="False" type="OnlyDuringDataEntry"><NotEmpty value="False"/><Unique value="False"/><Existing value="False"/><StrictValidation value="False"/></Validation><Storage autoIndex="True" index="None" indexLanguage="English" global="False" maxRepetition="1"/></Field>
+</fmxmlsnippet>

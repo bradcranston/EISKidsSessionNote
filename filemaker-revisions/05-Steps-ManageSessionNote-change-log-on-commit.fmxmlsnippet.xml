@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmxmlsnippet type="FMObjectList">
+<Step enable="True" id="89" name="# (comment)"><DisableStepCollapsed state="False"/><Restore state="False"/><Text>Revisions: refresh the change log before sealing, so any PDF built from here on - including the one shown to signers - lists every change.</Text></Step>
+<Step enable="True" id="68" name="If"><DisableStepCollapsed state="False"/><Restore state="False"/><Calculation><![CDATA[not IsEmpty ( SessionNote::revisionOf_Id )]]></Calculation></Step>
+<Step enable="True" id="1" name="Perform Script"><DisableStepCollapsed state="False"/><Calculation><![CDATA[JSONSetElement ( "" ; ["mode" ; "diff" ; JSONString] )]]></Calculation><Script id="0" name="SessionNote: Build Change Log"/></Step>
+<Step enable="True" id="70" name="End If"><DisableStepCollapsed state="False"/></Step>
+</fmxmlsnippet>
